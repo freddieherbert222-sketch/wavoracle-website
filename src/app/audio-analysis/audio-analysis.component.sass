@@ -1,0 +1,347 @@
+// WavOracle Audio Analysis Component Styles
+.audio-analysis-container
+  margin: 2rem 0
+  padding: 2rem
+  background: white
+  border-radius: 20px
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1)
+  border: 1px solid rgba(30, 58, 138, 0.1)
+
+  // Analysis Trigger
+  .analysis-trigger
+    text-align: center
+    padding: 2rem 0
+
+    .analysis-btn
+      background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+      border: none
+      border-radius: 15px
+      padding: 1rem 2rem
+      font-size: 1.2rem
+      font-weight: 600
+      color: white
+      transition: all 0.3s ease
+      box-shadow: 0 6px 20px rgba(30, 58, 138, 0.4)
+      margin-bottom: 1rem
+
+      &:hover:not(:disabled)
+        transform: translateY(-3px)
+        box-shadow: 0 8px 25px rgba(30, 58, 138, 0.5)
+
+      &:disabled
+        opacity: 0.6
+        cursor: not-allowed
+
+    .analysis-description
+      color: #666
+      font-size: 0.95rem
+      margin: 0
+
+  // Analysis Progress
+  .analysis-progress
+    text-align: center
+    padding: 2rem 0
+
+    .progress-header
+      margin-bottom: 2rem
+
+      h4
+        color: var(--wav-oracle-primary)
+        font-size: 1.5rem
+        font-weight: 700
+        margin-bottom: 0.5rem
+
+      p
+        color: #666
+        font-size: 1rem
+
+    .progress-bar-container
+      margin-bottom: 2rem
+      position: relative
+
+      .progress-bar
+        width: 100%
+        height: 12px
+        background: #e9ecef
+        border-radius: 6px
+        overflow: hidden
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1)
+
+        .progress-fill
+          height: 100%
+          background: linear-gradient(90deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+          border-radius: 6px
+          transition: width 0.3s ease
+          box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3)
+
+      .progress-text
+        position: absolute
+        top: -25px
+        right: 0
+        font-weight: 600
+        color: var(--wav-oracle-primary)
+
+    .analysis-steps
+      display: flex
+      justify-content: space-between
+      max-width: 600px
+      margin: 0 auto
+
+      .step
+        display: flex
+        flex-direction: column
+        align-items: center
+        flex: 1
+        opacity: 0.3
+        transition: all 0.3s ease
+
+        &.active
+          opacity: 1
+
+        .step-icon
+          font-size: 1.5rem
+          margin-bottom: 0.5rem
+
+        .step-text
+          font-size: 0.8rem
+          text-align: center
+          color: #666
+          font-weight: 500
+
+  // Analysis Results
+  .analysis-results
+    .results-header
+      display: flex
+      justify-content: space-between
+      align-items: center
+      margin-bottom: 2rem
+      padding-bottom: 1rem
+      border-bottom: 2px solid rgba(30, 58, 138, 0.1)
+
+      h3
+        color: var(--wav-oracle-primary)
+        margin: 0
+        font-size: 1.8rem
+        font-weight: 700
+
+    .results-grid
+      display: grid
+      grid-template-columns: 1fr 1fr
+      gap: 2rem
+      margin-bottom: 2rem
+
+      .result-card
+        background: linear-gradient(135deg, #f8fafc, #e2e8f0)
+        border-radius: 15px
+        padding: 1.5rem
+        border: 2px solid rgba(30, 58, 138, 0.1)
+        transition: all 0.3s ease
+
+        &:hover
+          transform: translateY(-2px)
+          box-shadow: 0 8px 25px rgba(30, 58, 138, 0.15)
+
+        .card-header
+          display: flex
+          align-items: center
+          margin-bottom: 1rem
+
+          .card-icon
+            font-size: 1.5rem
+            margin-right: 0.75rem
+
+          h4
+            margin: 0
+            color: var(--wav-oracle-primary)
+            font-weight: 600
+
+        .card-content
+          text-align: center
+
+          .result-value
+            font-size: 2.5rem
+            font-weight: 700
+            color: var(--wav-oracle-primary)
+            margin-bottom: 1rem
+            text-shadow: 0 2px 4px rgba(30, 58, 138, 0.2)
+
+          .confidence-badge
+            display: inline-block
+            padding: 0.5rem 1rem
+            border-radius: 25px
+            font-size: 0.8rem
+            font-weight: 600
+            text-transform: uppercase
+            letter-spacing: 0.5px
+
+            &.text-success
+              background: rgba(16, 185, 129, 0.1)
+              color: #059669
+              border: 1px solid rgba(16, 185, 129, 0.3)
+
+            &.text-warning
+              background: rgba(245, 158, 11, 0.1)
+              color: #d97706
+              border: 1px solid rgba(245, 158, 11, 0.3)
+
+            &.text-danger
+              background: rgba(239, 68, 68, 0.1)
+              color: #dc2626
+              border: 1px solid rgba(239, 68, 68, 0.3)
+
+    .analysis-details
+      background: #f8fafc
+      border-radius: 15px
+      padding: 1.5rem
+      margin-bottom: 2rem
+
+      .detail-section
+        margin-bottom: 1.5rem
+
+        &:last-child
+          margin-bottom: 0
+
+        h5
+          color: var(--wav-oracle-primary)
+          font-weight: 600
+          margin-bottom: 0.5rem
+          font-size: 1rem
+
+        p
+          color: #4a5568
+          margin: 0
+          line-height: 1.5
+
+        .notes-list
+          margin: 0
+          padding-left: 1.5rem
+
+          li
+            color: #4a5568
+            margin-bottom: 0.25rem
+
+        .recommendation
+          font-weight: 500
+          color: var(--wav-oracle-secondary)
+
+    .confidence-explanation
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.05), rgba(59, 130, 246, 0.05))
+      border-radius: 15px
+      padding: 1.5rem
+      border: 1px solid rgba(30, 58, 138, 0.1)
+
+      .confidence-levels
+        display: flex
+        flex-direction: column
+        gap: 1rem
+
+        .confidence-level
+          display: flex
+          align-items: center
+          padding: 0.75rem
+          border-radius: 10px
+          background: white
+          border: 1px solid rgba(0, 0, 0, 0.1)
+
+          .level-icon
+            font-size: 1.2rem
+            margin-right: 0.75rem
+
+          .level-text
+            color: #4a5568
+            font-weight: 500
+
+          &.high
+            border-left: 4px solid #10b981
+
+          &.medium
+            border-left: 4px solid #f59e0b
+
+          &.low
+            border-left: 4px solid #ef4444
+
+  // Error Display
+  .error-display
+    text-align: center
+    padding: 2rem 0
+
+    .error-card
+      background: #fef2f2
+      border: 1px solid #fecaca
+      border-radius: 15px
+      padding: 2rem
+      max-width: 400px
+      margin: 0 auto
+
+      .error-icon
+        font-size: 3rem
+        display: block
+        margin-bottom: 1rem
+
+      h4
+        color: #dc2626
+        margin-bottom: 1rem
+
+      p
+        color: #7f1d1d
+        margin-bottom: 1.5rem
+
+// Dark Mode Support
+[data-bs-theme="dark"]
+  .audio-analysis-container
+    background: var(--wav-oracle-dark)
+    border-color: rgba(30, 58, 138, 0.2)
+
+    .analysis-description
+      color: #cbd5e1
+
+    .progress-bar
+      background: #374151
+
+    .result-card
+      background: linear-gradient(135deg, #1f2937, #374151)
+      border-color: rgba(30, 58, 138, 0.3)
+
+    .analysis-details
+      background: #1f2937
+
+    .confidence-explanation
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.1), rgba(59, 130, 246, 0.1))
+
+    .confidence-level
+      background: #374151
+      border-color: rgba(255, 255, 255, 0.1)
+
+      .level-text
+        color: #d1d5db
+
+// Responsive Design
+@media (max-width: 768px)
+  .audio-analysis-container
+    padding: 1rem
+    margin: 1rem 0
+
+    .results-grid
+      grid-template-columns: 1fr
+      gap: 1rem
+
+    .analysis-steps
+      flex-direction: column
+      gap: 1rem
+
+      .step
+        flex-direction: row
+        text-align: left
+
+        .step-icon
+          margin-right: 0.75rem
+          margin-bottom: 0
+
+    .confidence-levels
+      .confidence-level
+        flex-direction: column
+        text-align: center
+
+        .level-icon
+          margin-right: 0
+          margin-bottom: 0.5rem 

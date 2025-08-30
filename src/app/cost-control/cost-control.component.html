@@ -1,0 +1,106 @@
+<div class="cost-control-container">
+  <!-- Toggle Button -->
+  <button 
+    class="btn btn-outline-info btn-sm cost-control-toggle"
+    (click)="toggleVisibility()"
+    title="Cost Control Dashboard">
+    <i class="fas fa-dollar-sign"></i> Cost Control
+  </button>
+
+  <!-- Cost Control Dashboard -->
+  <div class="cost-control-dashboard" *ngIf="isVisible">
+    <div class="dashboard-header">
+      <h4>💰 DeepSeek API Cost Control</h4>
+      <button class="btn-close" (click)="toggleVisibility()" title="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="dashboard-content">
+      <!-- Daily Usage -->
+      <div class="usage-section">
+        <h5>📊 Daily Token Usage</h5>
+        <div class="usage-progress">
+          <div class="progress-info">
+            <span class="usage-text">{{ usageStats?.dailyUsage || 0 }} / {{ usageStats?.dailyLimit || 0 }} tokens</span>
+            <span class="usage-percentage">{{ getDailyUsagePercentage() | number:'1.0-1' }}%</span>
+          </div>
+          <div class="progress">
+            <div class="progress-bar bg-{{ getUsageColor(getDailyUsagePercentage()) }}" 
+                 [style.width.%]="getDailyUsagePercentage()">
+            </div>
+          </div>
+          <div class="usage-status">
+            <span class="status-badge status-{{ getUsageColor(getUsageStatus().toLowerCase()) }}">
+              {{ getUsageStatus() }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Estimation -->
+      <div class="cost-section">
+        <h5>💵 Estimated Daily Cost</h5>
+        <div class="cost-display">
+          <span class="cost-amount">{{ getEstimatedCost() }}</span>
+          <span class="cost-note">(DeepSeek pricing)</span>
+        </div>
+      </div>
+
+      <!-- Cache Information -->
+      <div class="cache-section">
+        <h5>💾 Cache Status</h5>
+        <div class="cache-info">
+          <span class="cache-size">{{ usageStats?.cacheSize || 0 }} cached insights</span>
+          <button class="btn btn-outline-warning btn-sm" (click)="clearCache()">
+            <i class="fas fa-trash"></i> Clear Cache
+          </button>
+        </div>
+      </div>
+
+      <!-- Service Status -->
+      <div class="status-section">
+        <h5>🔌 Service Status</h5>
+        <div class="status-info">
+          <span class="status-indicator" [class]="isServiceAvailable() ? 'status-online' : 'status-offline'">
+            {{ isServiceAvailable() ? '🟢 Online' : '🔴 Offline' }}
+          </span>
+          <span class="status-note">
+            {{ isServiceAvailable() ? 'AI insights available' : 'Using fallback mode' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- User Usage (if available) -->
+      <div class="user-usage-section" *ngIf="usageStats?.userUsage && Object.keys(usageStats.userUsage).length > 0">
+        <h5>👥 User Usage</h5>
+        <div class="user-list">
+          <div class="user-item" *ngFor="let user of usageStats.userUsage | keyvalue">
+            <span class="user-id">{{ user.key }}</span>
+            <span class="user-tokens">{{ user.value }} tokens</span>
+            <span class="user-limit">/ 2000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Last Reset -->
+      <div class="reset-section">
+        <h5>🔄 Reset Information</h5>
+        <div class="reset-info">
+          <span class="reset-date">Last reset: {{ usageStats?.lastReset || 'Unknown' }}</span>
+          <span class="reset-note">Daily limits reset at midnight</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="dashboard-actions">
+      <button class="btn btn-primary btn-sm" (click)="refreshUsageStats()">
+        <i class="fas fa-sync-alt"></i> Refresh
+      </button>
+      <button class="btn btn-outline-secondary btn-sm" (click)="updateConfig()">
+        <i class="fas fa-cog"></i> Settings
+      </button>
+    </div>
+  </div>
+</div> 

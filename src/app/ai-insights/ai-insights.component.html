@@ -1,0 +1,172 @@
+<div class="ai-insights-container">
+  <!-- Header Section -->
+  <div class="insights-header">
+    <div class="header-content">
+      <h3>🔮 WavOracle AI Insights</h3>
+      <p class="header-description">Research-based musical analysis powered by DeepSeek AI</p>
+    </div>
+    
+    <div class="header-actions">
+      <button 
+        class="btn btn-outline-primary btn-sm" 
+        (click)="generateInsights()"
+        [disabled]="!canGenerateInsights() || isGenerating">
+        <i class="fas fa-magic"></i> Generate Insights
+      </button>
+    </div>
+  </div>
+
+  <!-- Generation Progress -->
+  <div class="insights-progress" *ngIf="isGenerating">
+    <div class="progress-header">
+      <h4>🔮 AI Analysis in Progress...</h4>
+      <p>Researching musical insights from Reddit, forums, and producer discussions</p>
+    </div>
+    
+    <div class="progress-bar-container">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+      <span class="progress-text">{{ progress.toFixed(0) }}%</span>
+    </div>
+    
+    <div class="analysis-steps">
+      <div class="step" [class.active]="progress > 0">
+        <span class="step-icon">🔍</span>
+        <span class="step-text">Analyzing YouTube title</span>
+      </div>
+      <div class="step" [class.active]="progress > 25">
+        <span class="step-icon">📚</span>
+        <span class="step-text">Researching music forums</span>
+      </div>
+      <div class="step" [class.active]="progress > 50">
+        <span class="step-icon">🎵</span>
+        <span class="step-text">Analyzing musical structure</span>
+      </div>
+      <div class="step" [class.active]="progress > 75">
+        <span class="step-icon">✨</span>
+        <span class="step-text">Generating insights</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI Insights Results -->
+  <div class="insights-results" *ngIf="hasInsights()">
+    <div class="results-header">
+      <h4>🎯 AI Analysis Complete</h4>
+      <button class="btn btn-outline-secondary btn-sm" (click)="resetInsights()">
+        <i class="fas fa-redo"></i> Regenerate
+      </button>
+    </div>
+
+    <div class="insights-grid">
+      <!-- Key Analysis -->
+      <div class="insight-card key-analysis">
+        <div class="card-header">
+          <span class="card-icon">🎼</span>
+          <h5>Key Analysis</h5>
+        </div>
+        <div class="card-content">
+          <p>{{ insights?.keyAnalysis }}</p>
+        </div>
+      </div>
+
+      <!-- BPM Analysis -->
+      <div class="insight-card bpm-analysis">
+        <div class="card-header">
+          <span class="card-icon">⏱️</span>
+          <h5>BPM Analysis</h5>
+        </div>
+        <div class="card-content">
+          <p>{{ insights?.bpmAnalysis }}</p>
+        </div>
+      </div>
+
+      <!-- Key Changes -->
+      <div class="insight-card key-changes" *ngIf="insights?.keyChanges?.length">
+        <div class="card-header">
+          <span class="card-icon">🔄</span>
+          <h5>Key Changes</h5>
+        </div>
+        <div class="card-content">
+          <ul class="insights-list">
+            <li *ngFor="let change of insights?.keyChanges">{{ change }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- BPM Variations -->
+      <div class="insight-card bpm-variations" *ngIf="insights?.bpmVariations?.length">
+        <div class="card-header">
+          <span class="card-icon">📈</span>
+          <h5>BPM Variations</h5>
+        </div>
+        <div class="card-content">
+          <ul class="insights-list">
+            <li *ngFor="let variation of insights?.bpmVariations">{{ variation }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Production Notes -->
+      <div class="insight-card production-notes" *ngIf="insights?.productionNotes?.length">
+        <div class="card-header">
+          <span class="card-icon">🎛️</span>
+          <h5>Production Notes</h5>
+        </div>
+        <div class="card-content">
+          <ul class="insights-list">
+            <li *ngFor="let note of insights?.productionNotes">{{ note }}</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Research Sources -->
+      <div class="insight-card research-sources" *ngIf="insights?.researchSources?.length">
+        <div class="card-header">
+          <span class="card-icon">📚</span>
+          <h5>Research Sources</h5>
+        </div>
+        <div class="card-content">
+          <ul class="insights-list">
+            <li *ngFor="let source of insights?.researchSources">{{ source }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confidence and Timestamp -->
+    <div class="insights-meta">
+      <div class="confidence-info">
+        <span class="confidence-label">AI Confidence:</span>
+        <span class="confidence-badge" [ngClass]="getConfidenceColor(insights?.confidence || 'medium')">
+          {{ getConfidenceIcon(insights?.confidence || 'medium') }}
+          {{ (insights?.confidence || 'medium').toUpperCase() }}
+        </span>
+      </div>
+      <div class="timestamp">
+        <span class="timestamp-label">Generated:</span>
+        <span class="timestamp-value">{{ insights?.timestamp | date:'short' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div class="error-display" *ngIf="error && !isGenerating">
+    <div class="error-card">
+      <span class="error-icon">❌</span>
+      <h4>AI Insights Failed</h4>
+      <p>{{ error }}</p>
+      <button class="btn btn-primary" (click)="generateInsights()">
+        Try Again
+      </button>
+    </div>
+  </div>
+
+  <!-- No Insights State -->
+  <div class="no-insights" *ngIf="!hasInsights() && !isGenerating && !error">
+    <div class="no-insights-icon">🔮</div>
+    <h4>AI Insights Ready</h4>
+    <p>Click "Generate Insights" to get research-based musical analysis for this YouTube video.</p>
+  </div>
+</div> 

@@ -1,0 +1,152 @@
+<div class="audio-file-selector-container">
+  <!-- Header Section -->
+  <div class="selector-header">
+    <div class="header-content">
+      <h3>🎵 Available Audio Files</h3>
+      <p class="header-description">Select a converted audio file for professional key & BPM analysis</p>
+    </div>
+    
+    <div class="header-actions">
+      <button 
+        class="btn btn-outline-secondary btn-sm" 
+        (click)="clearAllFiles()"
+        [disabled]="audioFiles.length === 0">
+        <i class="fas fa-trash"></i> Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Statistics Bar -->
+  <div class="stats-bar" *ngIf="audioFiles.length > 0">
+    <div class="stat-item">
+      <span class="stat-icon">⏳</span>
+      <span class="stat-label">Pending</span>
+      <span class="stat-value">{{ getPendingCount() }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-icon">✅</span>
+      <span class="stat-label">Completed</span>
+      <span class="stat-value">{{ getCompletedCount() }}</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-icon">❌</span>
+      <span class="stat-label">Failed</span>
+      <span class="stat-value">{{ getFailedCount() }}</span>
+    </div>
+    <div class="stat-item total">
+      <span class="stat-icon">📁</span>
+      <span class="stat-label">Total</span>
+      <span class="stat-value">{{ audioFiles.length }}</span>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div class="empty-state" *ngIf="audioFiles.length === 0">
+    <div class="empty-icon">🎵</div>
+    <h4>No Audio Files Available</h4>
+    <p>Convert a YouTube video to audio first, then it will appear here for analysis.</p>
+    <div class="empty-actions">
+      <button class="btn btn-primary" routerLink="/">
+        <i class="fas fa-plus"></i> Convert YouTube Video
+      </button>
+    </div>
+  </div>
+
+  <!-- Audio Files List -->
+  <div class="audio-files-list" *ngIf="audioFiles.length > 0">
+    <div class="list-header">
+      <div class="header-col file-info">File Information</div>
+      <div class="header-col format">Format</div>
+      <div class="header-col quality">Quality</div>
+      <div class="header-col duration">Duration</div>
+      <div class="header-col status">Status</div>
+      <div class="header-col actions">Actions</div>
+    </div>
+
+    <div class="file-item" 
+         *ngFor="let audioFile of audioFiles; trackBy: trackByFileId"
+         [class.selected]="isFileSelected(audioFile)"
+         [class.analysis-completed]="audioFile.analysisStatus === 'completed'"
+         (click)="selectFile(audioFile)">
+      
+      <!-- File Information -->
+      <div class="file-info">
+        <div class="file-icon">🎵</div>
+        <div class="file-details">
+          <div class="file-title">{{ audioFile.title }}</div>
+          <div class="file-artist">{{ audioFile.artist }}</div>
+          <div class="file-meta">
+            <span class="file-date">{{ formatDate(audioFile.downloadDate) }}</span>
+            <span class="file-size">{{ getFileSize(audioFile) }}</span>
+          </div>
+          <div class="file-filename" *ngIf="getDownloadFilename(audioFile)">
+            <span class="filename-label">Download as:</span>
+            <span class="filename-value">{{ getDownloadFilename(audioFile) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Format -->
+      <div class="format">
+        <span class="badge" [ngClass]="getFormatBadgeClass(audioFile.format)">
+          {{ audioFile.format.toUpperCase() }}
+        </span>
+      </div>
+
+      <!-- Quality -->
+      <div class="quality">
+        <span class="badge" [ngClass]="getQualityBadgeClass(audioFile.quality)">
+          {{ audioFile.quality }}
+        </span>
+      </div>
+
+      <!-- Duration -->
+      <div class="duration">
+        <span class="duration-text">{{ formatDuration(audioFile.duration) }}</span>
+      </div>
+
+      <!-- Status -->
+      <div class="status">
+        <span class="badge" [ngClass]="getStatusBadgeClass(audioFile.analysisStatus)">
+          {{ getStatusIcon(audioFile.analysisStatus) }} {{ audioFile.analysisStatus }}
+        </span>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button 
+          class="btn btn-sm btn-outline-primary"
+          (click)="selectFile(audioFile); $event.stopPropagation()"
+          [disabled]="audioFile.analysisStatus === 'analyzing'">
+          <i class="fas fa-music"></i> Analyze
+        </button>
+        <button 
+          class="btn btn-sm btn-outline-danger"
+          (click)="removeFile(audioFile.id); $event.stopPropagation()">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis Status Summary -->
+  <div class="analysis-summary" *ngIf="audioFiles.length > 0">
+    <div class="summary-header">
+      <h5>📊 Analysis Summary</h5>
+    </div>
+    <div class="summary-content">
+      <div class="summary-item">
+        <span class="summary-label">Ready for Analysis:</span>
+        <span class="summary-value">{{ getPendingCount() }} files</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Analysis Complete:</span>
+        <span class="summary-value">{{ getCompletedCount() }} files</span>
+      </div>
+      <div class="summary-item">
+        <span class="summary-label">Analysis Failed:</span>
+        <span class="summary-value">{{ getFailedCount() }} files</span>
+      </div>
+    </div>
+  </div>
+</div> 

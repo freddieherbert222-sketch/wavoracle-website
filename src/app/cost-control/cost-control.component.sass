@@ -1,0 +1,364 @@
+// WavOracle Cost Control Component Styles
+.cost-control-container
+  position: relative
+  display: inline-block
+
+  // Toggle Button
+  .cost-control-toggle
+    border-radius: 8px
+    padding: 0.4rem 0.8rem
+    font-size: 0.85rem
+    transition: all 0.3s ease
+
+    &:hover
+      transform: translateY(-1px)
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2)
+
+  // Dashboard
+  .cost-control-dashboard
+    position: absolute
+    top: 100%
+    right: 0
+    width: 400px
+    max-width: 90vw
+    background: white
+    border-radius: 15px
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15)
+    border: 1px solid rgba(30, 58, 138, 0.1)
+    z-index: 1000
+    margin-top: 0.5rem
+
+    // Dashboard Header
+    .dashboard-header
+      display: flex
+      justify-content: space-between
+      align-items: center
+      padding: 1rem 1.5rem
+      border-bottom: 1px solid rgba(30, 58, 138, 0.1)
+      background: linear-gradient(135deg, #f8fafc, #e2e8f0)
+
+      h4
+        margin: 0
+        color: var(--wav-oracle-primary)
+        font-size: 1.1rem
+        font-weight: 600
+
+      .btn-close
+        background: none
+        border: none
+        color: #666
+        cursor: pointer
+        padding: 0.25rem
+        border-radius: 4px
+        transition: all 0.2s ease
+
+        &:hover
+          background: rgba(0, 0, 0, 0.1)
+          color: #333
+
+    // Dashboard Content
+    .dashboard-content
+      padding: 1.5rem
+      max-height: 500px
+      overflow-y: auto
+
+      // Usage Section
+      .usage-section
+        margin-bottom: 1.5rem
+
+        h5
+          color: var(--wav-oracle-primary)
+          font-size: 1rem
+          font-weight: 600
+          margin-bottom: 0.75rem
+
+        .usage-progress
+          .progress-info
+            display: flex
+            justify-content: space-between
+            align-items: center
+            margin-bottom: 0.5rem
+
+            .usage-text
+              font-size: 0.9rem
+              color: #666
+              font-weight: 500
+
+            .usage-percentage
+              font-size: 0.85rem
+              color: var(--wav-oracle-primary)
+              font-weight: 600
+
+          .progress
+            height: 8px
+            background: rgba(30, 58, 138, 0.1)
+            border-radius: 4px
+            overflow: hidden
+            margin-bottom: 0.5rem
+
+            .progress-bar
+              height: 100%
+              transition: width 0.3s ease
+
+          .usage-status
+            text-align: center
+
+            .status-badge
+              padding: 0.25rem 0.75rem
+              border-radius: 20px
+              font-size: 0.75rem
+              font-weight: 600
+              text-transform: uppercase
+
+              &.status-success
+                background: rgba(16, 185, 129, 0.1)
+                color: #10b981
+
+              &.status-warning
+                background: rgba(245, 158, 11, 0.1)
+                color: #f59e0b
+
+              &.status-danger
+                background: rgba(239, 68, 68, 0.1)
+                color: #ef4444
+
+      // Cost Section
+      .cost-section
+        margin-bottom: 1.5rem
+
+        h5
+          color: var(--wav-oracle-primary)
+          font-size: 1rem
+          font-weight: 600
+          margin-bottom: 0.75rem
+
+        .cost-display
+          text-align: center
+          padding: 1rem
+          background: rgba(30, 58, 138, 0.05)
+          border-radius: 10px
+          border: 1px solid rgba(30, 58, 138, 0.1)
+
+          .cost-amount
+            display: block
+            font-size: 1.5rem
+            font-weight: 700
+            color: var(--wav-oracle-primary)
+            margin-bottom: 0.25rem
+
+          .cost-note
+            font-size: 0.8rem
+            color: #666
+            opacity: 0.8
+
+      // Cache Section
+      .cache-section
+        margin-bottom: 1.5rem
+
+        h5
+          color: var(--wav-oracle-primary)
+          font-size: 1rem
+          font-weight: 600
+          margin-bottom: 0.75rem
+
+        .cache-info
+          display: flex
+          justify-content: space-between
+          align-items: center
+          padding: 0.75rem
+          background: rgba(30, 58, 138, 0.05)
+          border-radius: 10px
+          border: 1px solid rgba(30, 58, 138, 0.1)
+
+          .cache-size
+            font-size: 0.9rem
+            color: #666
+
+      // Status Section
+      .status-section
+        margin-bottom: 1.5rem
+
+        h5
+          color: var(--wav-oracle-primary)
+          font-size: 1rem
+          font-weight: 600
+          margin-bottom: 0.75rem
+
+        .status-info
+          display: flex
+          flex-direction: column
+          gap: 0.5rem
+          padding: 0.75rem
+          background: rgba(30, 58, 138, 0.05)
+          border-radius: 10px
+          border: 1px solid rgba(30, 58, 138, 0.1)
+
+          .status-indicator
+            font-size: 0.9rem
+            font-weight: 600
+
+            &.status-online
+              color: #10b981
+
+            &.status-offline
+              color: #ef4444
+
+          .status-note
+            font-size: 0.8rem
+            color: #666
+            opacity: 0.8
+
+      // User Usage Section
+      .user-usage-section
+        margin-bottom: 1.5rem
+
+        h5
+          color: var(--wav-oracle-primary)
+          font-size: 1rem
+          font-weight: 600
+          margin-bottom: 0.75rem
+
+        .user-list
+          .user-item
+            display: flex
+            justify-content: space-between
+            align-items: center
+            padding: 0.5rem 0.75rem
+            border-bottom: 1px solid rgba(30, 58, 138, 0.1)
+
+            &:last-child
+              border-bottom: none
+
+            .user-id
+              font-size: 0.85rem
+              color: #333
+              font-weight: 500
+
+            .user-tokens
+              font-size: 0.85rem
+              color: var(--wav-oracle-primary)
+              font-weight: 600
+
+            .user-limit
+              font-size: 0.8rem
+              color: #666
+
+      // Reset Section
+      .reset-section
+        margin-bottom: 1.5rem
+
+        h5
+          color: var(--wav-oracle-primary)
+          font-size: 1rem
+          font-weight: 600
+          margin-bottom: 0.75rem
+
+        .reset-info
+          display: flex
+          flex-direction: column
+          gap: 0.25rem
+          padding: 0.75rem
+          background: rgba(30, 58, 138, 0.05)
+          border-radius: 10px
+          border: 1px solid rgba(30, 58, 138, 0.1)
+
+          .reset-date
+            font-size: 0.9rem
+            color: #333
+            font-weight: 500
+
+          .reset-note
+            font-size: 0.8rem
+            color: #666
+            opacity: 0.8
+
+    // Dashboard Actions
+    .dashboard-actions
+      display: flex
+      gap: 0.5rem
+      padding: 1rem 1.5rem
+      border-top: 1px solid rgba(30, 58, 138, 0.1)
+      background: rgba(30, 58, 138, 0.02)
+
+      .btn
+        flex: 1
+        border-radius: 8px
+        padding: 0.5rem
+        font-size: 0.85rem
+
+// Dark Mode Support
+[data-bs-theme="dark"]
+  .cost-control-dashboard
+    background: var(--wav-oracle-dark)
+    border-color: rgba(30, 58, 138, 0.2)
+
+    .dashboard-header
+      background: linear-gradient(135deg, #1e293b, #334155)
+
+      h4
+        color: var(--wav-oracle-secondary)
+
+    .dashboard-content
+      .usage-section,
+      .cost-section,
+      .cache-section,
+      .status-section,
+      .user-usage-section,
+      .reset-section
+        h5
+          color: var(--wav-oracle-secondary)
+
+        .usage-progress .progress-info .usage-text,
+        .cost-display .cost-note,
+        .cache-info .cache-size,
+        .status-info .status-note,
+        .reset-info .reset-note
+          color: #9ca3af
+
+        .usage-progress .progress-info .usage-percentage
+          color: var(--wav-oracle-secondary)
+
+        .cost-display .cost-amount
+          color: var(--wav-oracle-secondary)
+
+        .status-info .status-indicator.status-online
+          color: #10b981
+
+        .status-info .status-indicator.status-offline
+          color: #ef4444
+
+        .user-list .user-item
+          border-bottom-color: rgba(30, 58, 138, 0.2)
+
+          .user-id
+            color: #e2e8f0
+
+          .user-tokens
+            color: var(--wav-oracle-secondary)
+
+          .user-limit
+            color: #9ca3af
+
+        .reset-info
+          .reset-date
+            color: #e2e8f0
+
+          .reset-note
+            color: #9ca3af
+
+    .dashboard-actions
+      background: rgba(30, 58, 138, 0.1)
+      border-top-color: rgba(30, 58, 138, 0.2)
+
+// Responsive Design
+@media (max-width: 768px)
+  .cost-control-dashboard
+    width: calc(100vw - 2rem)
+    right: -1rem
+
+    .dashboard-content
+      padding: 1rem
+
+    .dashboard-header,
+    .dashboard-actions
+      padding: 1rem 

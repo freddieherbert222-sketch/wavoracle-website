@@ -1,0 +1,141 @@
+<div class="audio-analysis-container">
+  <!-- Analysis Trigger Button -->
+  <div class="analysis-trigger" *ngIf="!analysisResult && !isAnalyzing">
+    <button 
+      class="btn btn-primary btn-lg analysis-btn" 
+      (click)="analyzeAudio()"
+      [disabled]="!audioFile || !analyzer">
+      <i class="fas fa-music"></i>
+      🎵 Analyze Audio for Key & BPM
+    </button>
+    <p class="analysis-description">
+      Professional-grade musical analysis using Essentia.js technology
+    </p>
+  </div>
+
+  <!-- Analysis Progress -->
+  <div class="analysis-progress" *ngIf="isAnalyzing">
+    <div class="progress-header">
+      <h4>🔮 WavOracle Analysis in Progress...</h4>
+      <p>Analyzing musical key and BPM with industry-standard accuracy</p>
+    </div>
+    
+    <div class="progress-bar-container">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+      <span class="progress-text">{{ progress.toFixed(0) }}%</span>
+    </div>
+    
+    <div class="analysis-steps">
+      <div class="step" [class.active]="progress > 0">
+        <span class="step-icon">🎵</span>
+        <span class="step-text">Loading audio data</span>
+      </div>
+      <div class="step" [class.active]="progress > 30">
+        <span class="step-icon">🔍</span>
+        <span class="step-text">Analyzing musical key</span>
+      </div>
+      <div class="step" [class.active]="progress > 60">
+        <span class="step-icon">⏱️</span>
+        <span class="step-text">Detecting BPM</span>
+      </div>
+      <div class="step" [class.active]="progress > 90">
+        <span class="step-icon">✨</span>
+        <span class="step-text">Generating insights</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analysis Results -->
+  <div class="analysis-results" *ngIf="analysisResult && !isAnalyzing">
+    <div class="results-header">
+      <h3>🎯 Analysis Complete</h3>
+      <button class="btn btn-outline-secondary btn-sm" (click)="resetAnalysis()">
+        <i class="fas fa-redo"></i> Analyze Again
+      </button>
+    </div>
+
+    <div class="results-grid">
+      <!-- Key Result -->
+      <div class="result-card key-card">
+        <div class="card-header">
+          <span class="card-icon">🎼</span>
+          <h4>Musical Key</h4>
+        </div>
+        <div class="card-content">
+          <div class="result-value">{{ analysisResult.finalResult.key }}</div>
+          <div class="confidence-badge" [ngClass]="getConfidenceColor(analysisResult.finalResult.confidence)">
+            {{ getConfidenceIcon(analysisResult.finalResult.confidence) }}
+            {{ analysisResult.finalResult.confidence.toUpperCase() }} CONFIDENCE
+          </div>
+        </div>
+      </div>
+
+      <!-- BPM Result -->
+      <div class="result-card bpm-card">
+        <div class="card-header">
+          <span class="card-icon">⏱️</span>
+          <h4>BPM (Tempo)</h4>
+        </div>
+        <div class="card-content">
+          <div class="result-value">{{ analysisResult.finalResult.bpm }}</div>
+          <div class="confidence-badge" [ngClass]="getConfidenceColor(analysisResult.finalResult.confidence)">
+            {{ getConfidenceIcon(analysisResult.finalResult.confidence) }}
+            {{ analysisResult.finalResult.confidence.toUpperCase() }} CONFIDENCE
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Analysis Details -->
+    <div class="analysis-details">
+      <div class="detail-section">
+        <h5>🔬 Analysis Method</h5>
+        <p>{{ getMethodDescription(analysisResult.finalResult.method) }}</p>
+      </div>
+
+      <div class="detail-section" *ngIf="analysisResult.finalResult.notes.length > 0">
+        <h5>📝 Analysis Notes</h5>
+        <ul class="notes-list">
+          <li *ngFor="let note of analysisResult.finalResult.notes">{{ note }}</li>
+        </ul>
+      </div>
+
+      <div class="detail-section">
+        <h5>💡 DJ/Producer Recommendation</h5>
+        <p class="recommendation">{{ analysisResult.finalResult.recommendation }}</p>
+      </div>
+    </div>
+
+    <!-- Confidence Explanation -->
+    <div class="confidence-explanation">
+      <div class="confidence-levels">
+        <div class="confidence-level high">
+          <span class="level-icon">🎯</span>
+          <span class="level-text">High: Safe for mixing & production</span>
+        </div>
+        <div class="confidence-level medium">
+          <span class="level-icon">⚠️</span>
+          <span class="level-text">Medium: Verify with your ears</span>
+        </div>
+        <div class="confidence-level low">
+          <span class="level-icon">❌</span>
+          <span class="level-text">Low: Manual verification needed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div class="error-display" *ngIf="error && !isAnalyzing">
+    <div class="error-card">
+      <span class="error-icon">❌</span>
+      <h4>Analysis Failed</h4>
+      <p>{{ error }}</p>
+      <button class="btn btn-primary" (click)="resetAnalysis()">
+        Try Again
+      </button>
+    </div>
+  </div>
+</div> 

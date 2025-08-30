@@ -1,0 +1,129 @@
+<!-- Legal Disclaimer Footer -->
+<div class="legal-footer" *ngIf="isFooterVisible">
+  <div class="footer-content">
+    <div class="footer-links">
+      <button class="footer-link" (click)="toggleModal()">
+        <i class="fas fa-gavel"></i> Legal Disclaimer
+      </button>
+      <button class="footer-link" (click)="toggleModal()">
+        <i class="fas fa-shield-alt"></i> Terms of Use
+      </button>
+      <button class="footer-link" (click)="toggleModal()">
+        <i class="fas fa-user-shield"></i> Privacy Policy
+      </button>
+    </div>
+    <div class="footer-text">
+      <span class="copyright">© 2025 WavOracle. All rights reserved.</span>
+      <span class="disclaimer-note">By using this website, you agree to our legal terms.</span>
+    </div>
+  </div>
+</div>
+
+<!-- Legal Disclaimer Modal -->
+<div class="legal-modal-overlay" 
+     *ngIf="isModalVisible" 
+     (click)="onBackdropClick($event)"
+     (keydown)="onKeyDown($event)"
+     tabindex="0">
+  
+  <div class="legal-modal" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <h3><i class="fas fa-gavel"></i> Legal Disclaimer & Terms of Use</h3>
+      <button class="modal-close" (click)="closeModal()" title="Close">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="modal-content">
+      <!-- Primary Disclaimer -->
+      <div class="disclaimer-section">
+        <h4>⚠️ Important Legal Notice</h4>
+        <div class="disclaimer-text">
+          <p><strong>Users should only convert and download content for which they have the legal right or permission to do so.</strong></p>
+          
+          <p>The functionality of this website is published in good faith and for general purpose only. We are not liable for the actions you take on this website. We are also not liable for any losses or damages in connection with the use of our website.</p>
+          
+          <p>By using WavOracle, you hereby consent to our disclaimer and agree to its terms.</p>
+        </div>
+      </div>
+
+      <!-- Copyright Protection -->
+      <div class="disclaimer-section">
+        <h4>📜 Copyright & Intellectual Property</h4>
+        <div class="disclaimer-text">
+          <ul>
+            <li><strong>Legal Rights Required:</strong> You must own the content or have explicit permission to download/convert it</li>
+            <li><strong>Fair Use:</strong> Educational, research, and personal use may be permitted under fair use laws</li>
+            <li><strong>Commercial Use:</strong> Requires proper licensing and permissions</li>
+            <li><strong>DMCA Compliance:</strong> We respect copyright holders' rights</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- User Responsibilities -->
+      <div class="disclaimer-section">
+        <h4>👤 User Responsibilities</h4>
+        <div class="disclaimer-text">
+          <ul>
+            <li>Verify you have legal rights to any content before conversion</li>
+            <li>Respect copyright laws and intellectual property rights</li>
+            <li>Use converted content only for permitted purposes</li>
+            <li>Do not redistribute content without proper authorization</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Service Limitations -->
+      <div class="disclaimer-section">
+        <h4>🔒 Service Limitations & Disclaimers</h4>
+        <div class="disclaimer-text">
+          <ul>
+            <li><strong>No Warranty:</strong> Service provided "as is" without warranties</li>
+            <li><strong>No Liability:</strong> We are not liable for user actions or content</li>
+            <li><strong>No Guarantee:</strong> Conversion success not guaranteed for all content</li>
+            <li><strong>Service Changes:</strong> We may modify or discontinue services</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="disclaimer-section">
+        <h4>📧 Copyright & Legal Inquiries</h4>
+        <div class="disclaimer-text">
+          <p>If you are a copyright holder and believe your content is being used improperly:</p>
+          <ul>
+            <li><strong>DMCA Takedown:</strong> Contact us with proper DMCA notice</li>
+            <li><strong>Legal Issues:</strong> Email: legal&#64;wavoracle.com</li>
+            <li><strong>Response Time:</strong> We will respond within 48 hours</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Acceptance -->
+      <div class="disclaimer-section acceptance">
+        <h4>✅ Terms Acceptance</h4>
+        <div class="disclaimer-text">
+          <p><strong>By using WavOracle, you acknowledge that:</strong></p>
+          <ul>
+            <li>You have read and understood this disclaimer</li>
+            <li>You agree to comply with all applicable laws</li>
+            <li>You accept responsibility for your actions</li>
+            <li>You will not use the service for illegal purposes</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-primary" (click)="closeModal()">
+        <i class="fas fa-check"></i> I Understand & Accept
+      </button>
+      <button class="btn btn-outline-secondary" (click)="closeModal()">
+        <i class="fas fa-times"></i> Close
+      </button>
+    </div>
+  </div>
+</div> 
