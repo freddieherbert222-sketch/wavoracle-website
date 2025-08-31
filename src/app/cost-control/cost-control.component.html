@@ -1,3 +1,21 @@
+<div class="cost-control-widget">
+  <div class="header" (click)="toggleVisibility()">
+    <span>AI Cost</span>
+    <small *ngIf="usageStats">{{ getUsageStatus() }}</small>
+  </div>
+  <div class="body" *ngIf="isVisible && usageStats">
+    <div class="metric">
+      <span>Daily</span>
+      <div class="progress">
+        <div class="progress-bar bg-{{ getUsageColor(getDailyUsagePercentage()) }}" [style.width.%]="getDailyUsagePercentage()"></div>
+      </div>
+      <small>{{ usageStats.dailyUsage }} / {{ usageStats.dailyLimit }} tokens</small>
+    </div>
+    <div class="actions">
+      <button class="btn btn-sm btn-outline-secondary" (click)="clearCache()">Clear Cache</button>
+    </div>
+  </div>
+</div>
 <div class="cost-control-container">
   <!-- Toggle Button -->
   <button 

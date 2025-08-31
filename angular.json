@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "main": "src/main.ts",
-            "outputPath": "dist",
+            "outputPath": "dist/wavoracle/browser",
             "index": "src/index.html",
             "tsConfig": "tsconfig.app.json",
             "baseHref": "/",
@@ -28,11 +28,11 @@
               "src/manifest.webmanifest",
               "src/custom-service-worker.js"
             ],
-            "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "node_modules/@ng-select/ng-select/themes/default.theme.css",
-              "src/styles.sass"
-            ],
+                          "styles": [
+                "node_modules/bootstrap/dist/css/bootstrap.min.css",
+                "node_modules/@ng-select/ng-select/themes/default.theme.css",
+                "src/styles.sass"
+              ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
             ],
@@ -59,8 +59,27 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "120kb",
+                  "maximumError": "150kb"
+                }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "namedChunks": true,
+              "extractLicenses": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "120kb",
+                  "maximumError": "150kb"
                 }
               ]
             }
@@ -69,9 +88,13 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "wavoracle:build"
+            "buildTarget": "wavoracle:build:development",
+            "proxyConfig": "proxy.conf.json"
           },
           "configurations": {
+            "development": {
+              "buildTarget": "wavoracle:build:development"
+            },
             "production": {
               "buildTarget": "wavoracle:build:production"
             }
@@ -96,9 +119,9 @@
               "src/manifest.webmanifest",
               "src/custom-service-worker.js"
             ],
-            "styles": [
-              "src/styles.sass"
-            ],
+                          "styles": [
+                "src/styles.sass"
+              ],
             "scripts": []
           }
         },

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { DeepSeekAIService, AIInsight } from '../deepseek-ai.service';
 
@@ -7,7 +7,7 @@ import { DeepSeekAIService, AIInsight } from '../deepseek-ai.service';
   templateUrl: './ai-insights.component.html',
   styleUrls: ['./ai-insights.component.sass']
 })
-export class AIInsightsComponent implements OnInit, OnDestroy {
+export class AIInsightsComponent implements OnInit, OnDestroy, OnChanges {
   @Input() youtubeTitle: string = '';
   @Input() audioAnalysisResult: any = null;
   
@@ -17,6 +17,8 @@ export class AIInsightsComponent implements OnInit, OnDestroy {
   isGenerating = false;
   error: string | null = null;
   progress = 0;
+  private lastRequestedKey = '';
+  isFreeInsights = false;
 
   constructor(private deepseekService: DeepSeekAIService) {}
 
@@ -24,6 +26,16 @@ export class AIInsightsComponent implements OnInit, OnDestroy {
     // Auto-generate insights when component receives data
     if (this.youtubeTitle && this.deepseekService.isConfigured()) {
       this.generateInsights();
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ((changes['youtubeTitle'] || changes['audioAnalysisResult']) && this.canGenerateInsights()) {
+      const cacheKey = `${this.youtubeTitle}-${JSON.stringify(this.audioAnalysisResult?.finalResult || {})}`;
+      if (cacheKey !== this.lastRequestedKey) {
+        this.lastRequestedKey = cacheKey;
+        this.generateInsights();
+      }
     }
   }
 
@@ -60,6 +72,8 @@ export class AIInsightsComponent implements OnInit, OnDestroy {
         this.youtubeTitle, 
         this.audioAnalysisResult
       );
+      // If DeepSeek fell back to scraping, mark as free insights
+      this.isFreeInsights = !this.deepseekService.isAvailable();
 
       clearInterval(progressInterval);
       this.progress = 100;

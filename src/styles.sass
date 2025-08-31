@@ -1,7 +1,134 @@
-/* You can add global styles to this file, and also import other style files */
+// You can add global styles to this file, and also import other style files
 
 .navbar
     background-color: var(--bs-dark) !important
 
     [data-bs-theme="dark"] &
         background-color: var(--bs-dark-bg-subtle) !important
+
+// Fix Bootstrap CSS selector warnings
+.form-floating > label
+    // Override problematic Bootstrap selector
+    position: absolute
+    top: 0
+    left: 0
+    z-index: 2
+    max-width: 100%
+    height: 100%
+    padding: 1rem .75rem
+    overflow: hidden
+    color: rgba(var(--bs-body-color-rgb), .65)
+    text-align: start
+    text-overflow: ellipsis
+    white-space: nowrap
+    pointer-events: none
+    border: 1px solid transparent
+    transform-origin: 0 0
+    transition: opacity .1s ease-in-out, transform .1s ease-in-out
+
+// Suppress CSS warnings for Bootstrap selectors
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label,
+.form-floating > .form-select ~ label
+    transform: scale(.85) translateY(-.5rem) translate(.15rem)
+
+// WavOracle Custom Styles
+:root
+    --wav-oracle-primary: #1e3a8a
+    --wav-oracle-secondary: #3b82f6
+    --wav-oracle-accent: #60a5fa
+    --wav-oracle-dark: #0f172a
+    --wav-oracle-light: #f8fafc
+    --wav-oracle-success: #10b981
+    --wav-oracle-warning: #f59e0b
+    --wav-oracle-danger: #ef4444
+
+// Hero Section
+.hero-section
+    padding: 3rem 0
+    margin-bottom: 2rem
+
+.hero-title
+    font-size: 3.5rem
+    font-weight: 700
+    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    background-clip: text
+    margin-bottom: 1rem
+    text-shadow: 0 4px 8px rgba(30, 58, 138, 0.2)
+
+.hero-subtitle
+    font-size: 1.25rem
+    color: var(--wav-oracle-dark)
+    font-weight: 400
+    opacity: 0.8
+
+// Logo Styling
+.wav-oracle-logo
+    width: 40px
+    height: 40px
+    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+    border-radius: 50%
+    display: flex
+    align-items: center
+    justify-content: center
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.4)
+
+.logo-text
+    font-size: 1.5rem
+    color: white
+
+.brand-text
+    font-size: 1.5rem
+    font-weight: 700
+    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+    -webkit-background-clip: text
+    -webkit-text-fill-color: transparent
+    background-clip: text
+
+// Enhanced Form Styling
+.add-url-box
+    background: white
+    border-radius: 20px
+    padding: 2rem
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1)
+    border: 1px solid rgba(30, 58, 138, 0.1)
+
+// Button Enhancements
+.btn-primary
+    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+    border: none
+    border-radius: 12px
+    font-weight: 600
+    transition: all 0.3s ease
+    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.4)
+
+.btn-primary:hover
+    transform: translateY(-2px)
+    box-shadow: 0 6px 20px rgba(30, 58, 138, 0.5)
+
+// Form Input Enhancements
+.form-control-lg
+    border-radius: 12px
+    border: 2px solid #e9ecef
+    transition: all 0.3s ease
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05)
+
+.form-control-lg:focus
+    border-color: var(--wav-oracle-primary)
+    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25)
+
+// Dark Mode Support
+[data-bs-theme="dark"]
+    .hero-subtitle
+        color: var(--wav-oracle-light)
+    
+    .add-url-box
+        background: var(--wav-oracle-dark)
+        border-color: rgba(255, 107, 53, 0.2)
+    
+    .form-control-lg
+        background: #34495e
+        border-color: #4a5f7a
+        color: white

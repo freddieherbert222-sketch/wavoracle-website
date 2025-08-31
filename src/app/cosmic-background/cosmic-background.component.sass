@@ -1,0 +1,165 @@
+// Cosmic Background Component Styling
+:root
+  --cosmic-speed: 1.0
+  --cosmic-intensity: 1.0
+
+.cosmic-background
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  z-index: -1
+  overflow: hidden
+  pointer-events: none
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(13,17,23,0.95) 45%, rgba(17,23,41,0.98) 100%)
+
+// Create the cosmic vortex effect
+.cosmic-layer
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  border-radius: 50%
+  opacity: 0.65
+  mix-blend-mode: screen
+  animation-timing-function: ease-in-out
+  animation-iteration-count: infinite
+
+.layer-1
+  width: 800px
+  height: 800px
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(59, 130, 246, 0.4) 45deg, rgba(139, 92, 246, 0.6) 90deg, rgba(236, 72, 153, 0.8) 135deg, rgba(59, 130, 246, 0.4) 180deg, transparent 225deg, rgba(139, 92, 246, 0.3) 270deg, rgba(236, 72, 153, 0.5) 315deg, transparent 360deg)
+  mask: radial-gradient(ellipse at center, transparent 15%, black 25%, black 60%, transparent 75%)
+  -webkit-mask: radial-gradient(ellipse at center, transparent 15%, black 25%, black 60%, transparent 75%)
+  animation: cosmicVortex1 calc(120s / var(--cosmic-speed)) linear infinite
+
+.layer-2
+  width: 600px
+  height: 600px
+  background: conic-gradient(from 45deg at 50% 50%, transparent 0deg, rgba(139, 92, 246, 0.5) 60deg, rgba(236, 72, 153, 0.7) 120deg, rgba(59, 130, 246, 0.4) 180deg, rgba(168, 85, 247, 0.6) 240deg, rgba(236, 72, 153, 0.5) 300deg, transparent 360deg)
+  mask: radial-gradient(ellipse at center, transparent 20%, black 30%, black 55%, transparent 70%)
+  -webkit-mask: radial-gradient(ellipse at center, transparent 20%, black 30%, black 55%, transparent 70%)
+  animation: cosmicVortex2 calc(80s / var(--cosmic-speed)) linear infinite reverse
+
+.layer-3
+  width: 400px
+  height: 400px
+  background: conic-gradient(from 90deg at 50% 50%, transparent 0deg, rgba(236, 72, 153, 0.6) 72deg, rgba(139, 92, 246, 0.8) 144deg, rgba(59, 130, 246, 0.5) 216deg, rgba(192, 132, 252, 0.7) 288deg, transparent 360deg)
+  mask: radial-gradient(ellipse at center, transparent 25%, black 35%, black 50%, transparent 65%)
+  -webkit-mask: radial-gradient(ellipse at center, transparent 25%, black 35%, black 50%, transparent 65%)
+  animation: cosmicVortex3 calc(60s / var(--cosmic-speed)) linear infinite
+
+// Central cosmic glow
+.cosmic-gradient
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  width: 300px
+  height: 300px
+  background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.2) 30%, rgba(236, 72, 153, 0.15) 60%, transparent 80%)
+  border-radius: 50%
+  animation: cosmicGlow calc(40s / var(--cosmic-speed)) ease-in-out infinite alternate
+
+// Animation keyframes for cosmic vortex effect
+@keyframes cosmicVortex1
+  from
+    transform: translate(-50%, -50%) rotate(0deg)
+  to
+    transform: translate(-50%, -50%) rotate(360deg)
+
+@keyframes cosmicVortex2
+  from
+    transform: translate(-50%, -50%) rotate(360deg)
+  to
+    transform: translate(-50%, -50%) rotate(0deg)
+
+@keyframes cosmicVortex3
+  from
+    transform: translate(-50%, -50%) rotate(0deg)
+  to
+    transform: translate(-50%, -50%) rotate(360deg)
+
+@keyframes cosmicGlow
+  0%
+    opacity: calc(0.6 * var(--cosmic-intensity))
+    transform: translate(-50%, -50%) scale(1)
+  50%
+    opacity: calc(0.9 * var(--cosmic-intensity))
+    transform: translate(-50%, -50%) scale(1.2)
+  100%
+    opacity: calc(0.6 * var(--cosmic-intensity))
+    transform: translate(-50%, -50%) scale(1)
+
+// Analysis state modifications
+.cosmic-state-analyzing
+  .cosmic-layer
+    animation-duration: calc(18s / var(--cosmic-speed)) !important
+  
+  .cosmic-gradient
+    animation: cosmicPulse calc(2s / var(--cosmic-speed)) ease-in-out infinite
+    opacity: calc(1.4 * var(--cosmic-intensity))
+
+.cosmic-state-complete
+  .cosmic-layer
+    animation-duration: calc(240s / var(--cosmic-speed)) !important
+  
+  .cosmic-gradient
+    background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.4) 0%, rgba(139, 92, 246, 0.3) 30%, rgba(236, 72, 153, 0.2) 60%, transparent 80%)
+
+@keyframes cosmicPulse
+  0%, 100%
+    opacity: calc(1.2 * var(--cosmic-intensity))
+    transform: translate(-50%, -50%) scale(1)
+  50%
+    opacity: calc(1.8 * var(--cosmic-intensity))
+    transform: translate(-50%, -50%) scale(1.3)
+
+// Mode-based subtle hue tweak
+.cosmic-mode-minor
+  .layer-1, .layer-2, .layer-3
+    filter: hue-rotate(-8deg) saturate(1.05)
+
+.cosmic-mode-major
+  .layer-1, .layer-2, .layer-3
+    filter: hue-rotate(6deg) saturate(1.0)
+
+// Key-based color variations for cosmic vortex
+.cosmic-key-c .layer-1
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(59, 130, 246, 0.5) 45deg, rgba(99, 102, 241, 0.7) 90deg, rgba(59, 130, 246, 0.6) 135deg, rgba(99, 102, 241, 0.4) 180deg, transparent 225deg, rgba(59, 130, 246, 0.3) 270deg, rgba(99, 102, 241, 0.5) 315deg, transparent 360deg)
+
+.cosmic-key-csharp .layer-1, .cosmic-key-d .layer-1
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(139, 92, 246, 0.5) 45deg, rgba(168, 85, 247, 0.7) 90deg, rgba(139, 92, 246, 0.6) 135deg, rgba(168, 85, 247, 0.4) 180deg, transparent 225deg, rgba(139, 92, 246, 0.3) 270deg, rgba(168, 85, 247, 0.5) 315deg, transparent 360deg)
+
+.cosmic-key-dsharp .layer-1, .cosmic-key-e .layer-1
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(168, 85, 247, 0.5) 45deg, rgba(192, 132, 252, 0.7) 90deg, rgba(168, 85, 247, 0.6) 135deg, rgba(192, 132, 252, 0.4) 180deg, transparent 225deg, rgba(168, 85, 247, 0.3) 270deg, rgba(192, 132, 252, 0.5) 315deg, transparent 360deg)
+
+.cosmic-key-f .layer-1, .cosmic-key-fsharp .layer-1
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(236, 72, 153, 0.5) 45deg, rgba(232, 121, 249, 0.7) 90deg, rgba(236, 72, 153, 0.6) 135deg, rgba(232, 121, 249, 0.4) 180deg, transparent 225deg, rgba(236, 72, 153, 0.3) 270deg, rgba(232, 121, 249, 0.5) 315deg, transparent 360deg)
+
+.cosmic-key-g .layer-1, .cosmic-key-gsharp .layer-1
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(244, 63, 94, 0.5) 45deg, rgba(239, 68, 68, 0.7) 90deg, rgba(244, 63, 94, 0.6) 135deg, rgba(239, 68, 68, 0.4) 180deg, transparent 225deg, rgba(244, 63, 94, 0.3) 270deg, rgba(239, 68, 68, 0.5) 315deg, transparent 360deg)
+
+.cosmic-key-a .layer-1, .cosmic-key-asharp .layer-1
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(249, 115, 22, 0.5) 45deg, rgba(234, 179, 8, 0.7) 90deg, rgba(249, 115, 22, 0.6) 135deg, rgba(234, 179, 8, 0.4) 180deg, transparent 225deg, rgba(249, 115, 22, 0.3) 270deg, rgba(234, 179, 8, 0.5) 315deg, transparent 360deg)
+
+.cosmic-key-b .layer-1
+  background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(34, 197, 94, 0.5) 45deg, rgba(16, 185, 129, 0.7) 90deg, rgba(34, 197, 94, 0.6) 135deg, rgba(16, 185, 129, 0.4) 180deg, transparent 225deg, rgba(34, 197, 94, 0.3) 270deg, rgba(16, 185, 129, 0.5) 315deg, transparent 360deg)
+
+// Responsive adjustments
+@media (max-width: 768px)
+  .cosmic-layer
+    animation-duration: calc(1.5 * 60s / var(--cosmic-speed)) !important
+  
+  .cosmic-background
+    background: radial-gradient(ellipse at center, rgba(17, 23, 41, 0.9) 0%, rgba(13, 17, 23, 1) 100%)
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce)
+  .cosmic-layer,
+  .cosmic-gradient
+    animation: none !important
+    
+  .cosmic-background
+    background: linear-gradient(135deg, rgba(13, 17, 23, 0.95) 0%, rgba(17, 23, 41, 0.9) 50%, rgba(13, 17, 23, 0.95) 100%)

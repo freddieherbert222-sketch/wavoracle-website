@@ -54,8 +54,9 @@ export interface CostControlConfig {
   providedIn: 'root'
 })
 export class DeepSeekAIService {
-  private readonly apiUrl = 'https://api.deepseek.com/v1/chat/completions';
-  private readonly apiKey = environment.deepseekApiKey;
+  private readonly apiUrl = `${environment.apiBaseUrl}/deepseek/chat`; // Backend proxy route
+  private readonly apiKey = undefined as unknown as string; // Never used on client; kept for typing
+  private lastMode: 'ai' | 'free' = 'ai';
   
   // Cost Control & Monitoring
   private dailyTokenUsage = 0;
@@ -89,6 +90,7 @@ export class DeepSeekAIService {
 
       // Check cost control limits
       if (!this.canMakeRequest(userId)) {
+        this.lastMode = 'free';
         return this.generateFallbackInsights(youtubeTitle, audioAnalysisResult);
       }
 
@@ -118,11 +120,13 @@ export class DeepSeekAIService {
       }
       
       console.log(`✅ AI insights generated successfully (${response.usage.total_tokens} tokens used)`);
+      this.lastMode = 'ai';
       return insights;
 
     } catch (error) {
       console.error('❌ Failed to generate AI insights:', error);
       // Always fallback to free alternatives
+      this.lastMode = 'free';
       return this.generateFallbackInsights(youtubeTitle, audioAnalysisResult);
     }
   }
@@ -235,21 +239,26 @@ export class DeepSeekAIService {
    * Create optimized system prompt (reduce tokens)
    */
   private createOptimizedSystemPrompt(): string {
-    return `Music analyst. Provide FACTUAL insights from YouTube titles. Rules: Be precise, research-based, no speculation. Format: Key Analysis, BPM Analysis, Key Changes, BPM Variations, Production Notes, Research Sources.`;
+    return [
+      'Role: Music analyst. Provide factual insights from the YouTube title.',
+      'Rules: Be precise, research-based, no speculation. Avoid hallucinations.',
+      'If key/BPM are provided, reference them; otherwise avoid guessing exact numeric values.',
+      'Output Sections: Key Analysis, BPM Analysis, Key Changes, BPM Variations, Production Notes, Research Sources.',
+    ].join(' ');
   }
 
   /**
    * Create optimized user prompt (reduce tokens)
    */
   private createOptimizedUserPrompt(youtubeTitle: string, audioAnalysisResult?: any): string {
-    let prompt = `Analyze: "${youtubeTitle}"`;
+    let prompt = `Analyze the track based on the YouTube title: "${youtubeTitle}".`;
 
     if (audioAnalysisResult && audioAnalysisResult.finalResult) {
       const { key, bpm, confidence } = audioAnalysisResult.finalResult;
-      prompt += `\nAudio: Key ${key}, BPM ${bpm} (${confidence}). Provide additional insights.`;
+      prompt += `\nAudio context: Key ${key}, BPM ${bpm} (confidence: ${confidence}). Provide additional insights and cross-check.`;
     }
 
-    prompt += `\nResearch thoroughly, factual only.`;
+    prompt += `\nIf unknown, say unknown. Include 2-4 research sources if possible.`;
     return prompt;
   }
 
@@ -281,7 +290,7 @@ export class DeepSeekAIService {
     });
 
     try {
-      const response = await this.http.post<DeepSeekResponse>(this.apiUrl, request, { headers }).toPromise();
+      const response = await this.http.post<DeepSeekResponse>(this.apiUrl, request, { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) }).toPromise();
       
       if (!response || !response.choices || response.choices.length === 0) {
         throw new Error('Invalid response from DeepSeek API');
@@ -431,5 +440,12 @@ export class DeepSeekAIService {
    */
   isAvailable(userId?: string): boolean {
     return this.isConfigured() && this.canMakeRequest(userId);
+  }
+
+  /**
+   * Last mode used for insights: 'ai' or 'free'
+   */
+  getLastMode(): 'ai' | 'free' {
+    return this.lastMode;
   }
 } 

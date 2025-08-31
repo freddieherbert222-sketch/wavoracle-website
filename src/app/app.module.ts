@@ -15,9 +15,12 @@ import { AudioFileSelectorComponent } from './audio-file-selector/audio-file-sel
 import { AIInsightsComponent } from './ai-insights/ai-insights.component';
 import { CostControlComponent } from './cost-control/cost-control.component';
 import { LegalDisclaimerComponent } from './legal-disclaimer/legal-disclaimer.component';
+import { CosmicBackgroundComponent } from './cosmic-background/cosmic-background.component';
 import { WavOracleSocket } from './wavoracle-socket';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { WebScrapingService } from './web-scraping.service';
+import { DownloadsService } from './downloads.service';
+import { AudioFileHandlerService } from './audio-file-handler.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,8 @@ import { WebScrapingService } from './web-scraping.service';
     AudioFileSelectorComponent,
     AIInsightsComponent,
     CostControlComponent,
-    LegalDisclaimerComponent
+    LegalDisclaimerComponent,
+    CosmicBackgroundComponent
   ],
   imports: [
     BrowserModule,
@@ -45,8 +49,10 @@ import { WebScrapingService } from './web-scraping.service';
   ],
   providers: [
     CookieService, 
+    WebScrapingService,
+    DownloadsService,
     WavOracleSocket,
-    WebScrapingService
+    AudioFileHandlerService
   ],
   bootstrap: [AppComponent]
 })

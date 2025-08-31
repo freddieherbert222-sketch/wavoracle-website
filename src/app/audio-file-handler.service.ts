@@ -359,25 +359,24 @@ export class AudioFileHandlerService {
   ): string {
     const cleanArtist = this.cleanFilename(artist);
     const cleanTitle = this.cleanFilename(songTitle);
-    const cleanKey = this.cleanFilename(key);
-    const cleanBPM = Math.round(bpm).toString();
-    
+    const cleanKey = this.cleanFilename(this.normalizeKeyFormat(key));
+    const bpmRounded = Math.round(bpm);
+
     let filename = `${cleanArtist} - ${cleanTitle}`;
-    
-    // Add key and BPM
-    if (cleanKey && cleanBPM) {
-      filename += ` [${cleanKey}] [${cleanBPM}]`;
-    } else if (cleanKey) {
-      filename += ` [${cleanKey}]`;
-    } else if (cleanBPM) {
-      filename += ` [${cleanBPM}]`;
+
+    // Add key and BPM in one bracket: [Key BPMbpm]
+    if (cleanKey && bpmRounded) {
+      filename += ` [${cleanKey} ${bpmRounded}bpm]`;
     }
-    
-    // Add song type if not original
+
+    // Add song type if not original using dash suffix
     if (songType !== 'Original') {
-      filename += ` [${songType}]`;
+      filename += ` - ${songType}`;
     }
-    
+
+    // Collapse spaces
+    filename = filename.replace(/\s+/g, ' ').trim();
+
     return `${filename}.${format.toLowerCase()}`;
   }
 
@@ -408,9 +407,42 @@ export class AudioFileHandlerService {
    */
   private cleanFilename(filename: string): string {
     return filename
-      .replace(/[<>:"/\\|?*]/g, '') // Remove invalid Windows characters
-      .replace(/\s+/g, ' ') // Normalize spaces
+      .replace(/[<>:"/\\|?*%]/g, '')
+      .replace(/\s+/g, ' ')
       .trim();
+  }
+
+  /**
+   * Normalize key string to preferred format: Cmaj/Cmin/C#maj/Cflat etc.
+   */
+  private normalizeKeyFormat(originalKey: string): string {
+    if (!originalKey) return '';
+    let key = originalKey.trim();
+
+    const parts = key.split(/\s+/);
+    let tonic = parts[0];
+    const mode = (parts[1] || '').toLowerCase();
+
+    const flatMap: Record<string, string> = {
+      Ab: 'Aflat', Bb: 'Bflat', Cb: 'Cflat', Db: 'Dflat', Eb: 'Eflat', Fb: 'Fflat', Gb: 'Gflat',
+      AB: 'Aflat', BB: 'Bflat', CB: 'Cflat', DB: 'Dflat', EB: 'Eflat', FB: 'Fflat', GB: 'Gflat'
+    };
+    // Lowercase variants
+    const lc = tonic.toLowerCase();
+    const flatMapLc: Record<string, string> = {
+      'ab': 'Aflat', 'bb': 'Bflat', 'cb': 'Cflat', 'db': 'Dflat', 'eb': 'Eflat', 'fb': 'Fflat', 'gb': 'Gflat'
+    };
+    if (flatMap[tonic as keyof typeof flatMap]) {
+      tonic = flatMap[tonic as keyof typeof flatMap];
+    } else if (flatMapLc[lc as keyof typeof flatMapLc]) {
+      tonic = flatMapLc[lc as keyof typeof flatMapLc];
+    }
+
+    let suffix = '';
+    if (mode.includes('maj') || mode === 'major') suffix = 'maj';
+    else if (mode.includes('min') || mode === 'minor') suffix = 'min';
+
+    return suffix ? `${tonic}${suffix}` : tonic;
   }
 
   /**
@@ -418,5 +450,13 @@ export class AudioFileHandlerService {
    */
   getDownloadFilename(audioFileInfo: AudioFileInfo): string {
     return this.generateStandardizedFilename(audioFileInfo);
+  }
+
+  /**
+   * Get analysis status by download/file id
+   */
+  getAnalysisStatus(fileId: string): AudioFileInfo['analysisStatus'] | null {
+    const file = this.audioFilesSubject.value.find(f => f.id === fileId);
+    return file ? file.analysisStatus : null;
   }
 } 

@@ -1,10 +1,11 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { DeepSeekAIService, AIInsight } from './deepseek-ai.service';
 import { faTrashAlt, faCheckCircle, faTimesCircle, IconDefinition } from '@fortawesome/free-regular-svg-icons';
 import { faRedoAlt, faSun, faMoon, faCircleHalfStroke, faCheck, faExternalLinkAlt, faDownload, faFileImport, faFileExport, faCopy, faClock, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
-import { CookieService } from 'ngx-cookie-service';
 import { map, Observable, of, distinctUntilChanged } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 import { Download, DownloadsService, Status } from './downloads.service';
 import { MasterCheckboxComponent } from './master-checkbox.component';
@@ -12,6 +13,7 @@ import { Formats, Format, Quality } from './formats';
 import { Theme, Themes } from './theme';
 import { KeyValue } from "@angular/common";
 import { AudioFileHandlerService, AudioFileInfo } from './audio-file-handler.service';
+import { environment } from '../environments/environment';
 
 @Component({
     selector: 'app-root',
@@ -20,8 +22,9 @@ import { AudioFileHandlerService, AudioFileInfo } from './audio-file-handler.ser
     standalone: false
 })
 export class AppComponent implements AfterViewInit {
+  environment = environment;
   addUrl: string;
-  formats: Format[] = Formats;
+  formats: Format[] = Formats.filter(f => ['mp3','wav','flac'].includes(f.id));
   qualities: Quality[];
   quality: string;
   format: string;
@@ -42,8 +45,9 @@ export class AppComponent implements AfterViewInit {
   cancelImportFlag = false;
   ytDlpOptionsUpdateTime: string | null = null;
   ytDlpVersion: string | null = null;
-      wavoracleVersion: string | null = null;
+  wavoracleVersion: string | null = null;
   isAdvancedOpen = false;
+  urlWarning: string = '';
 
   // Audio Analysis properties
   selectedAudioFile: AudioFileInfo | null = null;
@@ -67,6 +71,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('doneClearFailed') doneClearFailed: ElementRef;
   @ViewChild('doneRetryFailed') doneRetryFailed: ElementRef;
   @ViewChild('doneDownloadSelected') doneDownloadSelected: ElementRef;
+  @ViewChild('urlInput') urlInputRef: ElementRef<HTMLInputElement>;
 
   faTrashAlt = faTrashAlt;
   faCheckCircle = faCheckCircle;
@@ -89,9 +94,11 @@ export class AppComponent implements AfterViewInit {
     public downloads: DownloadsService, 
     private cookieService: CookieService, 
     private http: HttpClient,
-    private audioFileHandler: AudioFileHandlerService
+    private audioFileHandler: AudioFileHandlerService,
+    private aiService: DeepSeekAIService
   ) {
-    this.format = cookieService.get('wavoracle_format') || 'any';
+    const savedFormat = cookieService.get('wavoracle_format');
+    this.format = this.formats.some(f => f.id === savedFormat) ? savedFormat : 'mp3';
     // Needs to be set or qualities won't automatically be set
     this.setQualities()
     this.quality = cookieService.get('wavoracle_quality') || 'best';
@@ -115,6 +122,17 @@ export class AppComponent implements AfterViewInit {
     this.downloads.doneChanged.subscribe(() => {
       this.processCompletedDownloads();
     });
+  }
+
+  // Enable download only after analysis finishes (completed or failed)
+  canDownloadFor(download: Download): boolean {
+    const status = this.audioFileHandler.getAnalysisStatus(download.id);
+    return status === 'completed' || status === 'failed';
+  }
+
+  isAnalyzingFor(download: Download): boolean {
+    const status = this.audioFileHandler.getAnalysisStatus(download.id);
+    return status === 'analyzing' || status === 'pending';
   }
 
   ngOnInit() {
@@ -157,7 +175,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   qualityChanged() {
-          this.cookieService.set('wavoracle_quality', this.quality, { expires: 3650 });
+    this.cookieService.set('wavoracle_quality', this.quality, { expires: 3650 });
     // Re-trigger custom directory change
     this.downloads.customDirsChanged.next(this.downloads.customDirs);
   }
@@ -205,6 +223,7 @@ export class AppComponent implements AfterViewInit {
       }
     });
   }
+
   getConfiguration() {
     this.downloads.configurationChanged.subscribe({
       next: (config) => {
@@ -219,15 +238,15 @@ export class AppComponent implements AfterViewInit {
 
   getPreferredTheme(cookieService: CookieService) {
     let theme = 'auto';
-          if (cookieService.check('wavoracle_theme')) {
-        theme = cookieService.get('wavoracle_theme');
+    if (cookieService.check('wavoracle_theme')) {
+      theme = cookieService.get('wavoracle_theme');
     }
 
     return this.themes.find(x => x.id === theme) ?? this.themes.find(x => x.id === 'auto');
   }
 
   themeChanged(theme: Theme) {
-            this.cookieService.set('wavoracle_theme', theme.id, { expires: 3650 });
+    this.cookieService.set('wavoracle_theme', theme.id, { expires: 3650 });
     this.setTheme(theme);
   }
 
@@ -241,7 +260,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   formatChanged() {
-          this.cookieService.set('wavoracle_format', this.format, { expires: 3650 });
+    this.cookieService.set('wavoracle_format', this.format, { expires: 3650 });
     // Updates to use qualities available
     this.setQualities()
     // Re-trigger custom directory change
@@ -249,7 +268,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   autoStartChanged() {
-          this.cookieService.set('wavoracle_auto_start', this.autoStart ? 'true' : 'false', { expires: 3650 });
+    this.cookieService.set('wavoracle_auto_start', this.autoStart ? 'true' : 'false', { expires: 3650 });
   }
 
   queueSelectionChanged(checked: number) {
@@ -264,9 +283,10 @@ export class AppComponent implements AfterViewInit {
 
   setQualities() {
     // qualities for specific format
-    this.qualities = this.formats.find(el => el.id == this.format).qualities
-    const exists = this.qualities.find(el => el.id === this.quality)
-    this.quality = exists ? this.quality : 'best'
+    const selectedFormat = this.formats.find(el => el.id == this.format);
+    this.qualities = selectedFormat ? selectedFormat.qualities : [];
+    const exists = this.qualities.find(el => el.id === this.quality);
+    this.quality = exists ? this.quality : (this.qualities[0]?.id || 'best');
   }
 
   addDownload(url?: string, quality?: string, format?: string, folder?: string, customNamePrefix?: string, playlistStrictMode?: boolean, playlistItemLimit?: number, autoStart?: boolean) {
@@ -281,14 +301,56 @@ export class AppComponent implements AfterViewInit {
 
     console.debug('Downloading: url='+url+' quality='+quality+' format='+format+' folder='+folder+' customNamePrefix='+customNamePrefix+' playlistStrictMode='+playlistStrictMode+' playlistItemLimit='+playlistItemLimit+' autoStart='+autoStart);
     this.addInProgress = true;
-    this.downloads.add(url, quality, format, folder, customNamePrefix, playlistStrictMode, playlistItemLimit, autoStart).subscribe((status: Status) => {
-      if (status.status === 'error') {
-        alert(`Error adding URL: ${status.msg}`);
-      } else {
-        this.addUrl = '';
+    this.urlWarning = '';
+
+    // Optional preflight: enforce 60min/250MB if metadata is available
+    this.downloads.probe(url).subscribe({
+      next: (meta: any) => {
+        const durationMin = meta?.duration_minutes;
+        const sizeMb = meta?.size_mb;
+        if ((durationMin && durationMin > 60) || (sizeMb && sizeMb > 250)) {
+          this.urlWarning = 'This video exceeds limits (max 60 minutes or 250 MB). Please choose a shorter/smaller video.';
+          this.addInProgress = false;
+          return;
+        }
+        this._startAdd(url!, quality!, format!, folder!, customNamePrefix!, playlistStrictMode!, playlistItemLimit!, autoStart!);
+      },
+      error: () => {
+        // If probe fails, proceed anyway (backend will enforce if needed)
+        this._startAdd(url!, quality!, format!, folder!, customNamePrefix!, playlistStrictMode!, playlistItemLimit!, autoStart!);
       }
-      this.addInProgress = false;
     });
+  }
+
+  private _startAdd(url: string, quality: string, format: string, folder: string, customNamePrefix: string, playlistStrictMode: boolean, playlistItemLimit: number, autoStart: boolean) {
+    this.urlWarning = '';
+    this.downloads.add(url, quality, format, folder, customNamePrefix, playlistStrictMode, playlistItemLimit, autoStart).subscribe({
+      next: (status: Status) => {
+        if (status.status === 'error') {
+          console.warn('Add error:', status.msg);
+          alert(`Error adding URL: ${status.msg}`);
+        } else {
+          this.addUrl = '';
+          // If socket is slow, force-refresh history to show the new item
+          this.downloads.fetchHistory();
+        }
+        this.addInProgress = false;
+      },
+      error: (err) => {
+        console.error('Add request failed:', err);
+        alert('Failed to add URL. Please try again.');
+        this.addInProgress = false;
+      }
+    });
+  }
+
+  onUrlChange(_: string) {
+    // Clear warnings when the user edits the URL
+    if (this.urlWarning) this.urlWarning = '';
+  }
+
+  focusUrlInput() {
+    try { this.urlInputRef?.nativeElement?.focus(); } catch {}
   }
 
   downloadItemByKey(id: string) {
@@ -344,7 +406,10 @@ export class AppComponent implements AfterViewInit {
 
   buildDownloadLink(download: Download) {
     let baseDir = this.downloads.configuration["PUBLIC_HOST_URL"];
-    if (download.quality == 'audio' || download.filename.endsWith('.mp3')) {
+    if (
+      download.quality == 'audio' ||
+      (download.filename && (download.filename.endsWith('.mp3') || download.filename.endsWith('.wav') || download.filename.endsWith('.flac') || download.filename.endsWith('.m4a') || download.filename.endsWith('.opus')))
+    ) {
       baseDir = this.downloads.configuration["PUBLIC_HOST_AUDIO_URL"];
     }
 
@@ -469,7 +534,7 @@ export class AppComponent implements AfterViewInit {
     const downloadUrl = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = downloadUrl;
-            a.download = 'wavoracle_urls.txt';
+    a.download = 'wavoracle_urls.txt';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -524,8 +589,8 @@ export class AppComponent implements AfterViewInit {
   private updateMetrics() {
     this.activeDownloads = Array.from(this.downloads.queue.values()).filter(d => d.status === 'downloading' || d.status === 'preparing').length;
     this.queuedDownloads = Array.from(this.downloads.queue.values()).filter(d => d.status === 'pending').length;
-    this.completedDownloads = Array.from(this.downloads.done.values()).filter(d => d.status === 'finished').length;
-    this.failedDownloads = Array.from(this.downloads.done.values()).filter(d => d.status === 'error').length;
+    this.completedDownloads = Array.from(this.downloads.queue.values()).filter(d => d.status === 'finished').length;
+    this.failedDownloads = Array.from(this.downloads.queue.values()).filter(d => d.status === 'error').length;
     
     // Calculate total speed from downloading items
     const downloadingItems = Array.from(this.downloads.queue.values())
@@ -549,6 +614,17 @@ export class AppComponent implements AfterViewInit {
         result
       );
     }
+
+    // Trigger AI insights (non-blocking)
+    const titleForAI = this.selectedSongTitle || this.selectedAudioFile?.title || '';
+    if (titleForAI && this.aiService.isConfigured()) {
+      this.aiService.generateMusicalInsights(titleForAI, result)
+        .then((insight: AIInsight) => {
+          // TODO: emit into AI insights component via an input or shared service if needed
+          console.log('🧠 AI insights:', insight);
+        })
+        .catch(err => console.warn('AI insights failed:', err));
+    }
   }
 
   // Method to set audio file for analysis (called when user selects a file)
@@ -569,8 +645,102 @@ export class AppComponent implements AfterViewInit {
       
       if (!alreadyProcessed) {
         console.log(`🔄 Processing completed download: ${download.title}`);
-        await this.audioFileHandler.processCompletedDownload(download);
+        const fileInfo = await this.audioFileHandler.processCompletedDownload(download);
+        if (fileInfo) {
+          // Immediately select file to trigger analysis flow
+          this.audioFileHandler.selectAudioFile(fileInfo);
+          this.setAudioFileForAnalysis(fileInfo);
+        }
       }
     }
+  }
+
+  // Method to determine the current analysis state for the animated background
+  getAnalysisState(): 'idle' | 'analyzing' | 'complete' {
+    if (this.addInProgress) {
+      return 'analyzing';
+    }
+    
+    const keyVal = this.audioAnalysisResult?.key || this.audioAnalysisResult?.finalResult?.key;
+    const bpmVal = this.audioAnalysisResult?.bpm || this.audioAnalysisResult?.finalResult?.bpm;
+    if (keyVal && bpmVal) {
+      return 'complete';
+    }
+    
+    return 'idle';
+  }
+
+  // Format and Quality Selection Methods
+  selectFormat(formatId: string): void {
+    this.format = formatId;
+    this.formatChanged();
+    // Update qualities for the selected format
+    const selectedFormat = this.formats.find(f => f.id === formatId);
+    if (selectedFormat) {
+      this.qualities = selectedFormat.qualities;
+      // Set default quality for the format
+      if (!this.qualities.some(q => q.id === this.quality)) {
+        this.quality = this.qualities[0]?.id || 'best';
+        this.qualityChanged();
+      }
+    }
+  }
+
+  selectQuality(qualityId: string): void {
+    this.quality = qualityId;
+    this.qualityChanged();
+  }
+
+  // Download Table Helper Methods
+  getFormatFromDownload(download: any): string {
+    // Extract format from filename or use quality setting
+    if (download.filename) {
+      const extension = download.filename.split('.').pop()?.toUpperCase();
+      return extension || 'UNKNOWN';
+    }
+    return this.format?.toUpperCase() || 'UNKNOWN';
+  }
+
+  getStatusBadgeClass(status: string): string {
+    switch (status) {
+      case 'finished': return 'status-success';
+      case 'error': return 'status-error';
+      case 'downloading': return 'status-progress';
+      case 'preparing': return 'status-preparing';
+      case 'pending': return 'status-pending';
+      default: return 'status-default';
+    }
+  }
+
+  getStatusText(status: string): string {
+    switch (status) {
+      case 'finished': return 'Completed';
+      case 'error': return 'Failed';
+      case 'downloading': return 'Downloading';
+      case 'preparing': return 'Preparing';
+      case 'pending': return 'Queued';
+      default: return status;
+    }
+  }
+
+  viewDownload(url: string): void {
+    window.open(url, '_blank');
+  }
+
+  hasAnyDownloads(): boolean {
+    const queueLength = this.downloads.queue ? Object.keys(this.downloads.queue).length : 0;
+    const doneLength = this.downloads.done ? Object.keys(this.downloads.done).length : 0;
+    return queueLength > 0 || doneLength > 0;
+  }
+
+  isAudioFormat(): boolean {
+    const audioFormats = ['mp3', 'wav', 'flac'];
+    return audioFormats.includes(this.format);
+  }
+
+  // Show quality options only when the selected format provides meaningful choices
+  shouldShowQuality(): boolean {
+    const selected = this.formats.find(f => f.id === this.format);
+    return !!selected && Array.isArray(selected.qualities) && selected.qualities.length > 1;
   }
 }

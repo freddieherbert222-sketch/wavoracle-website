@@ -51,6 +51,18 @@ export class AudioAnalysisComponent implements OnInit, OnDestroy {
           this.audioFileHandler.updateAnalysisStatus(audioFileInfo.id, 'analyzing');
           
           console.log(`🎯 Audio file selected for analysis: ${audioFileInfo.title}`);
+
+          // Auto-trigger analysis when analyzer and file are ready
+          if (this.analyzer && this.audioFile) {
+            void this.analyzeAudio();
+          } else {
+            // Retry shortly if analyzer not ready yet
+            setTimeout(() => {
+              if (this.analyzer && this.audioFile) {
+                void this.analyzeAudio();
+              }
+            }, 300);
+          }
         }
       });
   }
@@ -60,9 +72,6 @@ export class AudioAnalysisComponent implements OnInit, OnDestroy {
    */
   async initializeAnalyzer() {
     try {
-      // Load Essentia.js scripts
-      await this.loadEssentiaScripts();
-      
       // Wait for EssentiaWASM to be available
       if (typeof (window as any).EssentiaWASM === 'undefined') {
         throw new Error('EssentiaWASM not loaded');
@@ -78,39 +87,6 @@ export class AudioAnalysisComponent implements OnInit, OnDestroy {
       console.error('❌ Failed to initialize analyzer:', error);
       this.error = 'Failed to initialize audio analyzer';
     }
-  }
-
-  /**
-   * Load Essentia.js scripts from CDN
-   */
-  async loadEssentiaScripts() {
-    const scripts = [
-      'https://cdn.jsdelivr.net/npm/essentia.js@0.1.0/dist/essentia-wasm.web.js',
-      'https://cdn.jsdelivr.net/npm/essentia.js@0.1.0/dist/essentia.js-extractor.js',
-      'https://cdn.jsdelivr.net/npm/essentia.js@0.1.0/dist/essentia.js-plot.js'
-    ];
-
-    for (const script of scripts) {
-      await this.loadScript(script);
-    }
-  }
-
-  /**
-   * Load a script dynamically
-   */
-  loadScript(src: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (document.querySelector(`script[src="${src}"]`)) {
-        resolve();
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = () => resolve();
-      script.onerror = () => reject();
-      document.head.appendChild(script);
-    });
   }
 
   /**
@@ -164,6 +140,12 @@ export class AudioAnalysisComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('❌ Analysis failed:', error);
       this.error = 'Audio analysis failed. Please try again.';
+      if (this.selectedAudioFileInfo) {
+        this.audioFileHandler.updateAnalysisStatus(
+          this.selectedAudioFileInfo.id,
+          'failed'
+        );
+      }
     } finally {
       this.isAnalyzing = false;
     }

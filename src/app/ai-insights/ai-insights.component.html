@@ -53,7 +53,10 @@
   <!-- AI Insights Results -->
   <div class="insights-results" *ngIf="hasInsights()">
     <div class="results-header">
-      <h4>🎯 AI Analysis Complete</h4>
+      <h4>
+        🎯 {{ isFreeInsights ? 'Insights (Public Sources)' : 'AI Analysis Complete' }}
+        <span *ngIf="isFreeInsights" class="free-mode-tooltip" title="AI cap reached. Using public sources (e.g., Tunebat/Reddit).")>ℹ️</span>
+      </h4>
       <button class="btn btn-outline-secondary btn-sm" (click)="resetInsights()">
         <i class="fas fa-redo"></i> Regenerate
       </button>

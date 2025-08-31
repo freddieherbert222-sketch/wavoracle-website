@@ -1,0 +1,80 @@
+{
+  "/add": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/delete": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/start": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/downloads": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/version": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/download": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/audio_download": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/socket.io": {
+    "target": "http://localhost:8081",
+    "ws": true,
+    "secure": false,
+    "changeOrigin": true
+  },
+
+  "/api/add": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/delete": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/start": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/downloads": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/version": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/download": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/audio_download": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/socket.io": {
+    "target": "http://localhost:8081",
+    "ws": true,
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/*": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "ws": true,
+    "pathRewrite": { "^/api": "" }
+  }
+  ,
+  "/history": { "target": "http://localhost:8081", "secure": false, "changeOrigin": true },
+  "/api/history": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  }
+}

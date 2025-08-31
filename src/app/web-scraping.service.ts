@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, timeout } from 'rxjs/operators';
 
@@ -36,6 +37,12 @@ export class WebScrapingService {
     const results: ScrapedMusicData[] = [];
     
     try {
+      // Optional smoke call in dev to confirm backend route exists
+      if (environment.useRealScrape && environment.apiBaseUrl) {
+        try {
+          await this.http.get(`${environment.apiBaseUrl}/api/scrape?source=ping&query=test`).toPromise();
+        } catch {}
+      }
       // Try Tunebat first (most reliable for key/BPM)
       const tunebatResult = await this.scrapeTunebat(songTitle, artist);
       if (tunebatResult.success && tunebatResult.data) {
@@ -71,8 +78,12 @@ export class WebScrapingService {
       
       console.log(`🔍 Scraping Tunebat: ${searchUrl}`);
       
-      // Note: In a real implementation, you'd need a backend proxy due to CORS
-      // For now, we'll simulate the response
+      if (environment.useRealScrape) {
+        const apiUrl = `${environment.apiBaseUrl}/api/scrape?source=tunebat&query=${encodeURIComponent(searchQuery)}`;
+        const res = await this.http.get<ScrapingResult>(apiUrl).toPromise();
+        if (res && res.success) return res;
+      }
+      // Dev fallback: simulate
       const mockData: ScrapedMusicData = {
         key: this.generateMockKey(),
         bpm: this.generateMockBPM(),
@@ -108,8 +119,12 @@ export class WebScrapingService {
       
       console.log(`🔍 Scraping Reddit: ${searchUrl}`);
       
-      // Note: Reddit API requires proper authentication
-      // For now, we'll simulate community insights
+      if (environment.useRealScrape) {
+        const apiUrl = `${environment.apiBaseUrl}/api/scrape?source=reddit&query=${encodeURIComponent(searchQuery)}`;
+        const res = await this.http.get<ScrapingResult>(apiUrl).toPromise();
+        if (res && res.success) return res;
+      }
+      // Dev fallback: simulate
       const mockData: ScrapedMusicData = {
         key: this.generateMockKey(),
         bpm: this.generateMockBPM(),
@@ -145,8 +160,12 @@ export class WebScrapingService {
       
       console.log(`🔍 Scraping MusicBrainz: ${searchUrl}`);
       
-      // Note: MusicBrainz has rate limits and requires proper headers
-      // For now, we'll simulate metadata
+      if (environment.useRealScrape) {
+        const apiUrl = `${environment.apiBaseUrl}/api/scrape?source=musicbrainz&query=${encodeURIComponent(searchQuery)}`;
+        const res = await this.http.get<ScrapingResult>(apiUrl).toPromise();
+        if (res && res.success) return res;
+      }
+      // Dev fallback: simulate
       const mockData: ScrapedMusicData = {
         key: undefined, // MusicBrainz doesn't provide key/BPM
         bpm: undefined,

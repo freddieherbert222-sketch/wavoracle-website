@@ -64,7 +64,20 @@ export const Formats: Format[] = [
   {
     id: 'opus',
     text: 'OPUS',
-    qualities: [{ id: 'best', text: 'Best' }],
+    qualities: [
+      { id: '160', text: '160 kbps' },
+      { id: '128', text: '128 kbps' },
+      { id: '96', text: '96 kbps' }
+    ],
+  },
+  {
+    id: 'aac',
+    text: 'AAC',
+    qualities: [
+      { id: '256', text: '256 kbps' },
+      { id: '192', text: '192 kbps' },
+      { id: '128', text: '128 kbps' }
+    ],
   },
   {
     id: 'wav',

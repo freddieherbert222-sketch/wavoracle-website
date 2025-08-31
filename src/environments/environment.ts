@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  deepseekApiKey: 'sk-99b294517add4699a3f8e4bf6bfd791e'
+  deepseekApiKey: '',
+  apiBaseUrl: 'http://localhost:8081',
+  useRealScrape: false
 };
 
 /*
