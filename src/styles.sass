@@ -1,134 +1,577 @@
-// You can add global styles to this file, and also import other style files
+// WavOracle Professional Styles - Complete Rewrite
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap')
 
-.navbar
-    background-color: var(--bs-dark) !important
-
-    [data-bs-theme="dark"] &
-        background-color: var(--bs-dark-bg-subtle) !important
-
-// Fix Bootstrap CSS selector warnings
-.form-floating > label
-    // Override problematic Bootstrap selector
-    position: absolute
-    top: 0
-    left: 0
-    z-index: 2
-    max-width: 100%
-    height: 100%
-    padding: 1rem .75rem
-    overflow: hidden
-    color: rgba(var(--bs-body-color-rgb), .65)
-    text-align: start
-    text-overflow: ellipsis
-    white-space: nowrap
-    pointer-events: none
-    border: 1px solid transparent
-    transform-origin: 0 0
-    transition: opacity .1s ease-in-out, transform .1s ease-in-out
-
-// Suppress CSS warnings for Bootstrap selectors
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label,
-.form-floating > .form-select ~ label
-    transform: scale(.85) translateY(-.5rem) translate(.15rem)
-
-// WavOracle Custom Styles
+// CSS Variables for theming
 :root
-    --wav-oracle-primary: #1e3a8a
-    --wav-oracle-secondary: #3b82f6
-    --wav-oracle-accent: #60a5fa
-    --wav-oracle-dark: #0f172a
-    --wav-oracle-light: #f8fafc
-    --wav-oracle-success: #10b981
-    --wav-oracle-warning: #f59e0b
-    --wav-oracle-danger: #ef4444
+  // Color Palette
+  --wav-oracle-primary: #1e3a8a
+  --wav-oracle-secondary: #3b82f6
+  --wav-oracle-accent: #60a5fa
+  --wav-oracle-dark: #0f172a
+  --wav-oracle-light: #f8fafc
+  --wav-oracle-success: #10b981
+  --wav-oracle-warning: #f59e0b
+  --wav-oracle-danger: #ef4444
+  
+  // Typography
+  --font-primary: 'Orbitron', sans-serif
+  --font-secondary: 'IBM Plex Sans', sans-serif
+  --font-mono: 'Share Tech Mono', monospace
+  
+  // Spacing
+  --spacing-xs: 0.5rem
+  --spacing-sm: 1rem
+  --spacing-md: 1.5rem
+  --spacing-lg: 2rem
+  --spacing-xl: 3rem
+  
+  // Shadows
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1)
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15)
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.2)
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.3)
 
-// Hero Section
-.hero-section
-    padding: 3rem 0
-    margin-bottom: 2rem
+// Dark theme overrides
+[data-bs-theme="dark"]
+  --wav-oracle-dark: #f8fafc
+  --wav-oracle-light: #0f172a
+  --wav-oracle-primary: #60a5fa
+  --wav-oracle-secondary: #3b82f6
+
+// Global Reset and Base Styles
+*
+  box-sizing: border-box
+  margin: 0
+  padding: 0
+
+html, body
+  height: 100%
+  width: 100%
+  overflow-x: hidden
+  font-family: var(--font-secondary)
+  line-height: 1.6
+  color: var(--wav-oracle-dark)
+  background: var(--wav-oracle-light)
+  transition: all 0.3s ease
+
+[data-bs-theme="dark"] body
+  color: var(--wav-oracle-light)
+  background: var(--wav-oracle-dark)
+
+// Typography
+h1, h2, h3, h4, h5, h6
+  font-family: var(--font-primary)
+  font-weight: 700
+  line-height: 1.2
+  margin-bottom: var(--spacing-sm)
+
+p
+  margin-bottom: var(--spacing-sm)
+  font-weight: 400
+
+// Cosmic Background Component
+app-cosmic-background
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  z-index: -1
+  pointer-events: none
+
+// Dashboard Header
+.dashboard-header
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  z-index: 1000
+  background: rgba(255, 255, 255, 0.95)
+  backdrop-filter: blur(20px)
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1)
+  padding: var(--spacing-sm) 0
+  transition: all 0.3s ease
+
+[data-bs-theme="dark"] .dashboard-header
+  background: rgba(15, 23, 42, 0.95)
+  border-bottom-color: rgba(255, 255, 255, 0.1)
+
+.header-brand
+  display: flex
+  align-items: center
+  gap: var(--spacing-sm)
+
+.wav-oracle-logo
+  width: 40px
+  height: 40px
+  background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+  border-radius: 50%
+  display: flex
+  align-items: center
+  justify-content: center
+  box-shadow: var(--shadow-md)
+  transition: all 0.3s ease
+
+.wav-oracle-logo:hover
+  transform: scale(1.1)
+  box-shadow: var(--shadow-lg)
+
+.logo-icon
+  width: 24px
+  height: 24px
+  color: white
+
+.brand-title
+  font-family: var(--font-primary)
+  font-size: 1.5rem
+  font-weight: 700
+  background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+  background-clip: text
+  margin: 0
+
+.header-nav
+  display: flex
+  gap: var(--spacing-md)
+  align-items: center
+
+.nav-link
+  color: var(--wav-oracle-dark)
+  text-decoration: none
+  font-weight: 500
+  padding: var(--spacing-xs) var(--spacing-sm)
+  border-radius: 8px
+  transition: all 0.3s ease
+  position: relative
+
+[data-bs-theme="dark"] .nav-link
+  color: var(--wav-oracle-light)
+
+.nav-link:hover
+  color: var(--wav-oracle-primary)
+  background: rgba(30, 58, 138, 0.1)
+  transform: translateY(-1px)
+
+// Main Dashboard
+.dashboard-main
+  padding-top: 80px
+  min-height: 100vh
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 80px var(--spacing-md) var(--spacing-md)
+
+.dashboard-container
+  width: 100%
+  max-width: 1200px
+  margin: 0 auto
+
+// Hero Panel
+.hero-panel
+  text-align: center
+  margin-bottom: var(--spacing-xl)
+
+.hero-content
+  max-width: 800px
+  margin: 0 auto
 
 .hero-title
-    font-size: 3.5rem
-    font-weight: 700
-    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
-    -webkit-background-clip: text
-    -webkit-text-fill-color: transparent
-    background-clip: text
-    margin-bottom: 1rem
-    text-shadow: 0 4px 8px rgba(30, 58, 138, 0.2)
+  font-size: clamp(2.5rem, 5vw, 4rem)
+  font-weight: 900
+  background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+  -webkit-background-clip: text
+  -webkit-text-fill-color: transparent
+  background-clip: text
+  margin-bottom: var(--spacing-md)
+  text-shadow: var(--shadow-sm)
+  animation: fadeInUp 1s ease-out
 
 .hero-subtitle
-    font-size: 1.25rem
-    color: var(--wav-oracle-dark)
-    font-weight: 400
-    opacity: 0.8
+  font-size: clamp(1.1rem, 2.5vw, 1.25rem)
+  color: var(--wav-oracle-dark)
+  font-weight: 400
+  opacity: 0.8
+  margin-bottom: var(--spacing-lg)
+  animation: fadeInUp 1s ease-out 0.2s both
 
-// Logo Styling
-.wav-oracle-logo
-    width: 40px
-    height: 40px
-    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
-    border-radius: 50%
-    display: flex
-    align-items: center
-    justify-content: center
-    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.4)
+[data-bs-theme="dark"] .hero-subtitle
+  color: var(--wav-oracle-light)
 
-.logo-text
-    font-size: 1.5rem
-    color: white
+// URL Input Section
+.url-input-section
+  max-width: 600px
+  margin: 0 auto
+  animation: fadeInUp 1s ease-out 0.4s both
 
-.brand-text
-    font-size: 1.5rem
-    font-weight: 700
-    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
-    -webkit-background-clip: text
-    -webkit-text-fill-color: transparent
-    background-clip: text
+.url-form
+  display: flex
+  flex-direction: column
+  gap: var(--spacing-md)
 
-// Enhanced Form Styling
-.add-url-box
-    background: white
-    border-radius: 20px
-    padding: 2rem
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1)
-    border: 1px solid rgba(30, 58, 138, 0.1)
+.url-input-group
+  position: relative
+  display: flex
+  align-items: center
+  background: white
+  border-radius: 20px
+  padding: var(--spacing-sm)
+  box-shadow: var(--shadow-lg)
+  border: 2px solid transparent
+  transition: all 0.3s ease
+  overflow: hidden
 
-// Button Enhancements
-.btn-primary
-    background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
-    border: none
-    border-radius: 12px
-    font-weight: 600
-    transition: all 0.3s ease
-    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.4)
+[data-bs-theme="dark"] .url-input-group
+  background: rgba(255, 255, 255, 0.1)
+  backdrop-filter: blur(20px)
 
-.btn-primary:hover
-    transform: translateY(-2px)
-    box-shadow: 0 6px 20px rgba(30, 58, 138, 0.5)
+.url-input-group:focus-within
+  border-color: var(--wav-oracle-primary)
+  box-shadow: 0 0 0 4px rgba(30, 58, 138, 0.1)
+  transform: translateY(-2px)
 
-// Form Input Enhancements
-.form-control-lg
-    border-radius: 12px
-    border: 2px solid #e9ecef
-    transition: all 0.3s ease
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05)
+.input-icon
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 48px
+  height: 48px
+  color: var(--wav-oracle-primary)
+  flex-shrink: 0
 
-.form-control-lg:focus
-    border-color: var(--wav-oracle-primary)
-    box-shadow: 0 0 0 0.2rem rgba(30, 58, 138, 0.25)
+.feather-link
+  width: 24px
+  height: 24px
 
-// Dark Mode Support
-[data-bs-theme="dark"]
-    .hero-subtitle
-        color: var(--wav-oracle-light)
-    
-    .add-url-box
-        background: var(--wav-oracle-dark)
-        border-color: rgba(255, 107, 53, 0.2)
-    
-    .form-control-lg
-        background: #34495e
-        border-color: #4a5f7a
-        color: white
+.url-input
+  flex: 1
+  border: none
+  outline: none
+  background: transparent
+  font-size: 1.1rem
+  padding: var(--spacing-sm)
+  color: var(--wav-oracle-dark)
+  font-family: var(--font-secondary)
+
+[data-bs-theme="dark"] .url-input
+  color: var(--wav-oracle-light)
+
+.url-input::placeholder
+  color: rgba(0, 0, 0, 0.5)
+
+[data-bs-theme="dark"] .url-input::placeholder
+  color: rgba(255, 255, 255, 0.5)
+
+.convert-btn
+  background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary), var(--wav-oracle-accent))
+  border: none
+  border-radius: 16px
+  padding: var(--spacing-sm) var(--spacing-lg)
+  color: white
+  font-weight: 600
+  font-size: 1rem
+  cursor: pointer
+  transition: all 0.3s ease
+  box-shadow: var(--shadow-md)
+  display: flex
+  align-items: center
+  gap: var(--spacing-xs)
+  min-width: 140px
+  justify-content: center
+
+.convert-btn:hover
+  transform: translateY(-2px)
+  box-shadow: var(--shadow-lg)
+
+.convert-btn:active
+  transform: translateY(0)
+
+.convert-btn:disabled
+  opacity: 0.6
+  cursor: not-allowed
+  transform: none
+
+.feather-zap
+  width: 20px
+  height: 20px
+
+// URL Warning
+.url-warning
+  background: var(--wav-oracle-warning)
+  color: white
+  padding: var(--spacing-sm)
+  border-radius: 12px
+  font-size: 0.9rem
+  text-align: center
+  animation: slideInDown 0.3s ease-out
+
+// Format Selection
+.format-selection
+  display: flex
+  justify-content: center
+  gap: var(--spacing-sm)
+  margin-top: var(--spacing-md)
+
+.format-btn
+  background: rgba(255, 255, 255, 0.8)
+  border: 2px solid transparent
+  border-radius: 12px
+  padding: var(--spacing-sm) var(--spacing-md)
+  color: var(--wav-oracle-dark)
+  font-weight: 500
+  cursor: pointer
+  transition: all 0.3s ease
+  backdrop-filter: blur(10px)
+
+[data-bs-theme="dark"] .format-btn
+  background: rgba(0, 0, 0, 0.3)
+  color: var(--wav-oracle-light)
+
+.format-btn:hover
+  background: rgba(30, 58, 138, 0.1)
+  border-color: var(--wav-oracle-primary)
+  transform: translateY(-1px)
+
+.format-btn.active
+  background: var(--wav-oracle-primary)
+  color: white
+  border-color: var(--wav-oracle-primary)
+
+// Analysis Dashboard
+.analysis-dashboard
+  margin-top: var(--spacing-xl)
+  padding: var(--spacing-lg)
+  background: rgba(255, 255, 255, 0.9)
+  border-radius: 20px
+  backdrop-filter: blur(20px)
+  box-shadow: var(--shadow-lg)
+  border: 1px solid rgba(0, 0, 0, 0.1)
+
+[data-bs-theme="dark"] .analysis-dashboard
+  background: rgba(0, 0, 0, 0.3)
+  border-color: rgba(255, 255, 255, 0.1)
+
+.dashboard-title
+  font-family: var(--font-primary)
+  font-size: 1.5rem
+  font-weight: 700
+  color: var(--wav-oracle-primary)
+  margin-bottom: var(--spacing-md)
+  text-align: center
+
+[data-bs-theme="dark"] .dashboard-title
+  color: var(--wav-oracle-accent)
+
+// WavOracle Insights Card
+.insights-card
+  position: fixed
+  bottom: var(--spacing-md)
+  right: var(--spacing-md)
+  background: white
+  border-radius: 16px
+  padding: var(--spacing-md)
+  box-shadow: var(--shadow-xl)
+  border: 1px solid rgba(0, 0, 0, 0.1)
+  max-width: 300px
+  z-index: 100
+  animation: slideInRight 0.5s ease-out
+
+[data-bs-theme="dark"] .insights-card
+  background: var(--wav-oracle-dark)
+  border-color: rgba(255, 255, 255, 0.1)
+
+.insights-header
+  display: flex
+  align-items: center
+  gap: var(--spacing-sm)
+  margin-bottom: var(--spacing-sm)
+
+.insights-icon
+  width: 32px
+  height: 32px
+  background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary))
+  border-radius: 50%
+  display: flex
+  align-items: center
+  justify-content: center
+  color: white
+
+.insights-title
+  font-family: var(--font-primary)
+  font-size: 1.1rem
+  font-weight: 600
+  color: var(--wav-oracle-primary)
+  margin: 0
+
+[data-bs-theme="dark"] .insights-title
+  color: var(--wav-oracle-accent)
+
+.generate-insights-btn
+  width: 100%
+  background: linear-gradient(135deg, var(--wav-oracle-primary), var(--wav-oracle-secondary))
+  border: none
+  border-radius: 12px
+  padding: var(--spacing-sm)
+  color: white
+  font-weight: 600
+  cursor: pointer
+  transition: all 0.3s ease
+  margin-top: var(--spacing-sm)
+
+.generate-insights-btn:hover
+  transform: translateY(-1px)
+  box-shadow: var(--shadow-md)
+
+// Dev Overlay
+.dev-overlay
+  position: fixed
+  top: 80px
+  left: var(--spacing-sm)
+  background: rgba(0, 0, 0, 0.8)
+  color: white
+  padding: var(--spacing-sm)
+  border-radius: 8px
+  font-family: var(--font-mono)
+  font-size: 0.8rem
+  z-index: 999
+  display: flex
+  flex-direction: column
+  gap: 4px
+
+// Animations
+@keyframes fadeInUp
+  from
+    opacity: 0
+    transform: translateY(30px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+@keyframes slideInDown
+  from
+    opacity: 0
+    transform: translateY(-20px)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+@keyframes slideInRight
+  from
+    opacity: 0
+    transform: translateX(30px)
+  to
+    opacity: 1
+    transform: translateX(0)
+
+// Responsive Design
+@media (max-width: 768px)
+  .dashboard-header
+    padding: var(--spacing-xs) 0
+  
+  .header-nav
+    display: none
+  
+  .hero-title
+    font-size: 2.5rem
+  
+  .hero-subtitle
+    font-size: 1.1rem
+  
+  .url-input-group
+    flex-direction: column
+    gap: var(--spacing-sm)
+    padding: var(--spacing-md)
+  
+  .convert-btn
+    width: 100%
+  
+  .insights-card
+    position: static
+    margin-top: var(--spacing-md)
+    max-width: none
+
+@media (max-width: 480px)
+  .dashboard-main
+    padding: 80px var(--spacing-sm) var(--spacing-sm)
+  
+  .hero-title
+    font-size: 2rem
+  
+  .hero-subtitle
+    font-size: 1rem
+  
+  .url-input-group
+    border-radius: 16px
+    padding: var(--spacing-sm)
+
+// Utility Classes
+.text-center
+  text-align: center
+
+.mb-0
+  margin-bottom: 0
+
+.mt-3
+  margin-top: var(--spacing-md)
+
+.d-none
+  display: none
+
+.d-flex
+  display: flex
+
+.align-items-center
+  align-items: center
+
+.justify-content-center
+  justify-content: center
+
+.gap-2
+  gap: var(--spacing-sm)
+
+.gap-3
+  gap: var(--spacing-md)
+
+// Bootstrap Overrides
+.navbar
+  background-color: transparent !important
+  backdrop-filter: blur(20px)
+
+[data-bs-theme="dark"] .navbar
+  background-color: rgba(15, 23, 42, 0.95) !important
+
+.btn-link
+  color: var(--wav-oracle-primary) !important
+  text-decoration: none
+
+[data-bs-theme="dark"] .btn-link
+  color: var(--wav-oracle-accent) !important
+
+.dropdown-menu
+  background: rgba(255, 255, 255, 0.95)
+  backdrop-filter: blur(20px)
+  border: 1px solid rgba(0, 0, 0, 0.1)
+  border-radius: 12px
+  box-shadow: var(--shadow-lg)
+
+[data-bs-theme="dark"] .dropdown-menu
+  background: rgba(15, 23, 42, 0.95)
+  border-color: rgba(255, 255, 255, 0.1)
+
+.dropdown-item
+  color: var(--wav-oracle-dark)
+  padding: var(--spacing-sm) var(--spacing-md)
+  border-radius: 8px
+  margin: 2px var(--spacing-xs)
+  transition: all 0.3s ease
+
+[data-bs-theme="dark"] .dropdown-item
+  color: var(--wav-oracle-light)
+
+.dropdown-item:hover
+  background: rgba(30, 58, 138, 0.1)
+  color: var(--wav-oracle-primary)
+
+.dropdown-item.active
+  background: var(--wav-oracle-primary)
+  color: white
