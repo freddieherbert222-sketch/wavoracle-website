@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1756596667709,
+  "timestamp": 1756599381362,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -55,7 +55,7 @@
     "/assets/icons/safari-pinned-tab.svg": "617d8fdacc699dc62ab4137feccc0c12da9723b9",
     "/custom-service-worker.js": "8e1f785c798618da41f84413151ddb8f2d2bbc93",
     "/favicon.ico": "ed201bd48ba44639d4662715249b7bd8c284f4ef",
-    "/main.js": "5183804ba9b7aa4b92c9f54229a9913ecd008f2c",
+    "/main.js": "0c59f0916d98ba128390b87535a978eb390e2adc",
     "/manifest.webmanifest": "db7be0436f9da95862ca8bfb97929024d3721bf0",
     "/runtime.js": "fa3b9c6889d40a962ecf1a27d8bc3c7adaaa37f8",
     "/scripts.js": "7211c1b6834a647c20c392e955cec24fcf063731",
